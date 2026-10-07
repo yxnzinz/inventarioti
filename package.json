@@ -1,0 +1,14 @@
+{
+  "name": "inventarioti",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Painel e API de inventário de TI da Intercargas",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^5.1.0",
+    "mysql2": "^3.24.5"
+  }
+}
