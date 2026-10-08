@@ -8,6 +8,12 @@ const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const MAX_ROWS = 50000;
 const REQUIRED_HEADERS = ['Nº','Filial','Setor','Localização','Responsável','Hostname','Usuário','Processador','Núcleos','Threads','Sistema','Build','RAM','Disco','Coleta','Arquivo de origem'];
+const STATUS_HEADER = 'Status patrimonial';
+const STATUS_VALUES = ['Alugada', 'De posse pessoal'];
+const STATUS_ALIASES = ['status patrimonial','status do ativo','tipo de patrimonio','tipo de patrimônio','tipo de ativo','situacao patrimonial','situação patrimonial','propriedade','posse','alugado','alugada','locado','locada'];
+function normalizeLabel(value) { return String(value ?? '').trim().toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
+function findStatusHeader(headers) { return headers.find((h) => STATUS_ALIASES.includes(normalizeLabel(h)) || normalizeLabel(h).includes('alugad') || normalizeLabel(h).includes('locad')); }
+function normalizeStatus(value, header = '') { const label = normalizeLabel(value); const headerLabel = normalizeLabel(header); if ((headerLabel.includes('alug') || headerLabel.includes('locad')) && ['sim','yes','true','1'].includes(label)) return 'Alugada'; return label.includes('alug') || label.includes('locad') ? 'Alugada' : 'De posse pessoal'; }
 let pool;
 
 app.use(express.json({ limit: '15mb' }));
@@ -42,9 +48,11 @@ function validatePayload(payload) {
   const headers = Array.isArray(payload.Headers) ? payload.Headers : (Array.isArray(payload.headers) ? payload.headers : REQUIRED_HEADERS);
   const missing = REQUIRED_HEADERS.filter((h) => !headers.includes(h));
   if (missing.length) throw new Error(`Colunas obrigatórias ausentes: ${missing.join(', ')}`);
+  const statusHeader = findStatusHeader(headers) || STATUS_HEADER;
   const normalized = rows.map((row) => {
     const clean = {};
     for (const h of REQUIRED_HEADERS) clean[h] = row[h] ?? null;
+    clean[STATUS_HEADER] = normalizeStatus(row[statusHeader], statusHeader);
     return clean;
   });
   return {
@@ -52,7 +60,7 @@ function validatePayload(payload) {
     SourceFile: String(payload.SourceFile || payload.sourceFile || 'importacao.xlsx'),
     ImportedAt: new Date().toISOString(),
     Count: normalized.length,
-    Headers: REQUIRED_HEADERS,
+    Headers: [...REQUIRED_HEADERS, STATUS_HEADER],
     Rows: normalized
   };
 }
@@ -101,6 +109,27 @@ app.post('/api/inventory/import', requireImportToken, async (req, res) => {
     res.status(200).json({ ok: true, count: payload.Count, importedAt: payload.ImportedAt });
   } catch (err) {
     res.status(400).json({ error: err.message || 'Payload inválido.' });
+  }
+});
+
+app.put('/api/inventory/status', requireImportToken, async (req, res) => {
+  try {
+    const requested = normalizeStatus(req.body?.Status || req.body?.status);
+    const hostname = String(req.body?.Hostname || req.body?.hostname || '').trim();
+    const number = String(req.body?.Numero ?? req.body?.numero ?? '').trim();
+    if (!hostname && !number) return res.status(400).json({ error: 'Informe o Hostname ou o Nº da máquina.' });
+    const [currentRows] = await pool.query('SELECT payload FROM inventory_state WHERE state_key = ?', ['current']);
+    if (!currentRows.length) return res.status(404).json({ error: 'Nenhuma base de inventário disponível.' });
+    const payload = typeof currentRows[0].payload === 'string' ? JSON.parse(currentRows[0].payload) : currentRows[0].payload;
+    payload.Headers = Array.isArray(payload.Headers) && payload.Headers.includes(STATUS_HEADER) ? payload.Headers : [...REQUIRED_HEADERS, STATUS_HEADER];
+    const row = payload.Rows.find((item) => (number && String(item['Nº']) === number) || (hostname && String(item.Hostname || '').trim() === hostname));
+    if (!row) return res.status(404).json({ error: 'Máquina não encontrada na base atual.' });
+    row[STATUS_HEADER] = requested;
+    payload.ImportedAt = new Date().toISOString();
+    await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(payload), 'current']);
+    res.json({ ok: true, status: requested, hostname: row.Hostname, numero: row['Nº'] });
+  } catch (err) {
+    res.status(400).json({ error: err.message || 'Não foi possível atualizar o status.' });
   }
 });
 

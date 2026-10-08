@@ -20,3 +20,7 @@ Dashboard operacional editorial: navegação lateral escura, superfícies claras
 
 ## Publicação
 Serviço híbrido gerenciado pelo Webdev: Express atende a API e os arquivos estáticos, enquanto MySQL gerenciado conserva a última base válida entre reinícios e múltiplas instâncias.
+
+
+## Status patrimonial
+A importação aceita uma coluna opcional reconhecida como `Alugada`, `Status patrimonial`, `Status do ativo`, `Tipo de ativo`, `Propriedade` ou variações de locação. Valores textuais e `Sim/Não` em colunas de aluguel são normalizados para `Alugada` ou `De posse pessoal`. Cada máquina no detalhe por setor exibe um seletor; alterações autenticadas são persistidas pela rota `PUT /api/inventory/status` para todos os usuários.
