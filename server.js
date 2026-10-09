@@ -87,7 +87,7 @@ async function initDb() {
     const current = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
     const ids = new Set((current.Rows || []).map((row) => String(row['Nº'] ?? '')));
     const seedById = new Map(seed.Rows.map((row) => [String(row['Nº'] ?? ''), row]));
-    const additions = seed.Rows.filter((row) => row.Setor === 'ALUGUEL' && !ids.has(String(row['Nº'] ?? '')));
+    const additions = seed.Rows.filter((row) => !ids.has(String(row['Nº'] ?? '')));
     let assetUpdates = 0;
     (current.Rows || []).forEach((row) => {
       const source = seedById.get(String(row['Nº'] ?? ''));

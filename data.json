@@ -1,7 +1,7 @@
 {
-  "source": "CópiadeINVENTARIO_TI_(MÁQUINAS)_SAO_FITTIPALDI_-_INTERCARGAS(FINALIZADO).xlsx",
-  "importedAt": "2026-10-09T18:27:35",
-  "count": 66,
+  "source": "INVENTARIO_TI_(MÁQUINAS)11111_SAO_FITTIPALDI_-_INTERCARGAS(FINALIZADO).xlsx",
+  "importedAt": "2026-10-09T18:54:43",
+  "count": 67,
   "headers": [
     "Nº",
     "Filial",
@@ -1342,6 +1342,26 @@
       "Arquivo de origem": "USOALUGUEL-(10)inventario_DESKTOP-VNL1IO4",
       "Status patrimonial": "Alugada",
       "Patrimônio": "542"
+    },
+    {
+      "Nº": 67,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "BACKUP",
+      "Localização": "—",
+      "Responsável": "BRUNO",
+      "Hostname": "USO",
+      "Usuário": "BRUNO",
+      "Processador": "11th Gen Intel(R) Core(TM) i7-1185G7 @ 3.00GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.19045",
+      "RAM": 16,
+      "Disco": 512,
+      "Coleta": "2026-10-08 15:03:00",
+      "Arquivo de origem": "BRUNO-(DIRETORIA)inventario_DESKTOP-UDK87DG",
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     }
   ]
 }
