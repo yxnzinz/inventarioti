@@ -13,6 +13,7 @@ const STATUS_VALUES = ['Alugada', 'Patrimônio', 'Pessoal'];
 const STATUS_ALIASES = ['status patrimonial','status do ativo','tipo de patrimonio','tipo de patrimônio','tipo de ativo','situacao patrimonial','situação patrimonial','propriedade','posse','alugado','alugada','locado','locada'];
 function normalizeLabel(value) { return String(value ?? '').trim().toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 function findStatusHeader(headers) { return headers.find((h) => STATUS_ALIASES.includes(normalizeLabel(h)) || normalizeLabel(h).includes('alugad') || normalizeLabel(h).includes('locad')); }
+function normalizeSector(value) { const label = normalizeLabel(value); return ['alugado','alugada','aluguel'].includes(label) ? 'ALUGUEL' : String(value ?? '').trim(); }
 function normalizeStatus(value, header = '') { const label = normalizeLabel(value); const headerLabel = normalizeLabel(header); if (label.includes('pessoal') || label.includes('usuario') || label.includes('usuário')) return 'Pessoal'; if ((headerLabel.includes('alug') || headerLabel.includes('locad')) && ['sim','yes','true','1'].includes(label)) return 'Alugada'; return label.includes('alug') || label.includes('locad') ? 'Alugada' : 'Patrimônio'; }
 let pool;
 
@@ -52,6 +53,7 @@ function validatePayload(payload) {
   const normalized = rows.map((row) => {
     const clean = {};
     for (const h of REQUIRED_HEADERS) clean[h] = row[h] ?? null;
+    clean['Setor'] = normalizeSector(clean['Setor']);
     clean[STATUS_HEADER] = normalizeStatus(row[statusHeader], statusHeader);
     return clean;
   });
@@ -73,11 +75,23 @@ async function initDb() {
     payload JSON NOT NULL,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   )`);
-  const [rows] = await pool.query('SELECT state_key FROM inventory_state WHERE state_key = ?', ['current']);
+  const [rows] = await pool.query('SELECT state_key, payload FROM inventory_state WHERE state_key = ?', ['current']);
+  const seed = validatePayload(JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8')));
   if (!rows.length) {
-    const seed = JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8'));
-    const payload = validatePayload(seed);
-    await pool.query('INSERT IGNORE INTO inventory_state (state_key, payload) VALUES (?, ?)', ['current', JSON.stringify(payload)]);
+    await pool.query('INSERT IGNORE INTO inventory_state (state_key, payload) VALUES (?, ?)', ['current', JSON.stringify(seed)]);
+  } else {
+    const current = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
+    const ids = new Set((current.Rows || []).map((row) => String(row['Nº'] ?? '')));
+    const additions = seed.Rows.filter((row) => row.Setor === 'ALUGUEL' && !ids.has(String(row['Nº'] ?? '')));
+    if (additions.length) {
+      current.Headers = Array.from(new Set([...(current.Headers || REQUIRED_HEADERS), STATUS_HEADER]));
+      current.Rows = [...(current.Rows || []), ...additions];
+      current.Count = current.Rows.length;
+      current.SourceFile = seed.SourceFile;
+      current.ImportedAt = seed.ImportedAt;
+      await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(current), 'current']);
+      console.log(`Adicionados ${additions.length} equipamentos do setor ALUGUEL à base persistente.`);
+    }
   }
 }
 

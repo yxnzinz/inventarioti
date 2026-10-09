@@ -1,6 +1,8 @@
 {
+  "source": "CópiadeINVENTARIO_TI_(MÁQUINAS)_SAO_FITTIPALDI_-_INTERCARGAS(FINALIZADO).xlsx",
+  "importedAt": "2026-10-09T18:27:35",
+  "count": 66,
   "headers": [
-    "",
     "Nº",
     "Filial",
     "Setor",
@@ -16,7 +18,8 @@
     "RAM",
     "Disco",
     "Coleta",
-    "Arquivo de origem"
+    "Arquivo de origem",
+    "Status patrimonial"
   ],
   "rows": [
     {
@@ -35,7 +38,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-07 08:52:49",
-      "Arquivo de origem": "ANDRESSA-_COMERCIAL_inventario_LAPTOP-MPB77MLG.xlsx"
+      "Arquivo de origem": "ANDRESSA-_COMERCIAL_inventario_LAPTOP-MPB77MLG.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 2,
@@ -53,7 +57,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-10-07 08:51:07",
-      "Arquivo de origem": "BEATRIZ-_COMERCIAL_inventario_DESKTOP-E2QTOJ5.xlsx"
+      "Arquivo de origem": "BEATRIZ-_COMERCIAL_inventario_DESKTOP-E2QTOJ5.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 3,
@@ -71,7 +76,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-07 08:54:31",
-      "Arquivo de origem": "DANIELE-_COMERCIAL_inventario_DESKTOP-VJV6KTM.xlsx"
+      "Arquivo de origem": "DANIELE-_COMERCIAL_inventario_DESKTOP-VJV6KTM.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 4,
@@ -89,7 +95,8 @@
       "RAM": 8,
       "Disco": 240,
       "Coleta": "2026-10-07 08:43:44",
-      "Arquivo de origem": "FERREIRA-_COMERCIAL_inventario_DESKTOP-2JEGCFK.xlsx"
+      "Arquivo de origem": "FERREIRA-_COMERCIAL_inventario_DESKTOP-2JEGCFK.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 5,
@@ -107,7 +114,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-07 08:47:49",
-      "Arquivo de origem": "GEOVANA-_COMERCIAL_inventario_DESKTOP-KF3KIC2.xlsx"
+      "Arquivo de origem": "GEOVANA-_COMERCIAL_inventario_DESKTOP-KF3KIC2.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 6,
@@ -125,7 +133,8 @@
       "RAM": 4,
       "Disco": 256,
       "Coleta": "2026-10-07 08:45:18",
-      "Arquivo de origem": "HELIO-_COMERCIAL_inventario_DESKTOP-PKTRNRL.xlsx"
+      "Arquivo de origem": "HELIO-_COMERCIAL_inventario_DESKTOP-PKTRNRL.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 7,
@@ -143,7 +152,8 @@
       "RAM": 8,
       "Disco": 240,
       "Coleta": "2026-10-07 08:44:15",
-      "Arquivo de origem": "KARLA-_COMERCIAL_INVENTARIO.xlsx"
+      "Arquivo de origem": "KARLA-_COMERCIAL_INVENTARIO.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 8,
@@ -161,7 +171,8 @@
       "RAM": 8,
       "Disco": 120,
       "Coleta": "2026-10-07 08:50:44",
-      "Arquivo de origem": "PATRICIA-_COMERCIAL_inventario_DESKTOP-6C29UA1.xlsx"
+      "Arquivo de origem": "PATRICIA-_COMERCIAL_inventario_DESKTOP-6C29UA1.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 9,
@@ -179,7 +190,8 @@
       "RAM": 16,
       "Disco": 240,
       "Coleta": "2026-09-30 11:49:52",
-      "Arquivo de origem": "SAMANTHA-_COMERCIAL-PROMOCIONAL__inventario_DESKTOP-Q52EF0R.xlsx"
+      "Arquivo de origem": "SAMANTHA-_COMERCIAL-PROMOCIONAL__inventario_DESKTOP-Q52EF0R.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 10,
@@ -197,7 +209,8 @@
       "RAM": 16,
       "Disco": 240,
       "Coleta": "2026-10-07 10:50:00",
-      "Arquivo de origem": "—"
+      "Arquivo de origem": "—",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 11,
@@ -215,7 +228,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-10-05 08:21:01",
-      "Arquivo de origem": "BRUNA-_OPERAÇÕES_inventario_DESKTOP-43JEC7L.xlsx"
+      "Arquivo de origem": "BRUNA-_OPERAÇÕES_inventario_DESKTOP-43JEC7L.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 12,
@@ -233,7 +247,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-10-05 08:24:16",
-      "Arquivo de origem": "BRUNA2-_OPERAÇÕES_inventario_DESKTOP-DDN4N59.xlsx"
+      "Arquivo de origem": "BRUNA2-_OPERAÇÕES_inventario_DESKTOP-DDN4N59.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 13,
@@ -251,7 +266,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-05 09:41:09",
-      "Arquivo de origem": "DAVISON_OPERAÇÕES_inventario_DESKTOP-UFROS0O.xlsx"
+      "Arquivo de origem": "DAVISON_OPERAÇÕES_inventario_DESKTOP-UFROS0O.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 14,
@@ -269,7 +285,8 @@
       "RAM": 8,
       "Disco": 240,
       "Coleta": "2026-10-02 17:23:29",
-      "Arquivo de origem": "GIOVANI-_OPERAÇÕES__inventario_Inter01.xlsx"
+      "Arquivo de origem": "GIOVANI-_OPERAÇÕES__inventario_Inter01.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 15,
@@ -287,7 +304,8 @@
       "RAM": 4,
       "Disco": 240,
       "Coleta": "2026-10-02 17:13:07",
-      "Arquivo de origem": "GUILHERME-_OPERAÇÕES__inventario_Operacional05.xlsx"
+      "Arquivo de origem": "GUILHERME-_OPERAÇÕES__inventario_Operacional05.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 16,
@@ -305,7 +323,8 @@
       "RAM": 8,
       "Disco": 120,
       "Coleta": "2026-10-05 09:43:55",
-      "Arquivo de origem": "JAIR-_OPERAÇÕES_inventario_DESKTOP-ADCMA3B.xlsx"
+      "Arquivo de origem": "JAIR-_OPERAÇÕES_inventario_DESKTOP-ADCMA3B.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 17,
@@ -323,7 +342,8 @@
       "RAM": 8,
       "Disco": 240,
       "Coleta": "2026-10-02 17:11:00",
-      "Arquivo de origem": "MONITORAMENTO-_OPERAÇÕES__inventario_DESKTOP-1QCL13D.xlsx"
+      "Arquivo de origem": "MONITORAMENTO-_OPERAÇÕES__inventario_DESKTOP-1QCL13D.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 18,
@@ -341,7 +361,8 @@
       "RAM": 8,
       "Disco": 512,
       "Coleta": "2026-09-29 11:31:00",
-      "Arquivo de origem": "SHEILA-_OPERAÇÕES__inventario_DESKTOP-4KU5E2C.xlsx"
+      "Arquivo de origem": "SHEILA-_OPERAÇÕES__inventario_DESKTOP-4KU5E2C.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 19,
@@ -359,7 +380,8 @@
       "RAM": 8,
       "Disco": 120,
       "Coleta": "2026-10-05 08:23:42",
-      "Arquivo de origem": "STHER-_OPERAÇÕES_inventario_DESKTOP-7MD2SIR.xlsx"
+      "Arquivo de origem": "STHER-_OPERAÇÕES_inventario_DESKTOP-7MD2SIR.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 20,
@@ -377,7 +399,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-06 09:31:14",
-      "Arquivo de origem": "CAROLINE-_SAC_inventario_Caroline-Facundo.xlsx"
+      "Arquivo de origem": "CAROLINE-_SAC_inventario_Caroline-Facundo.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 21,
@@ -395,7 +418,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-06 09:26:39",
-      "Arquivo de origem": "GLEICE_-_SAC__DESKTOP-FRL3ME9.xlsx"
+      "Arquivo de origem": "GLEICE_-_SAC__DESKTOP-FRL3ME9.xlsx",
+      "Status patrimonial": "Alugada"
     },
     {
       "Nº": 22,
@@ -413,7 +437,8 @@
       "RAM": 24,
       "Disco": 256,
       "Coleta": "2026-10-06 09:26:41",
-      "Arquivo de origem": "ISADORA-_SAC_inventario_DESKTOP-IV24H65.xlsx"
+      "Arquivo de origem": "ISADORA-_SAC_inventario_DESKTOP-IV24H65.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 23,
@@ -431,7 +456,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-06 09:32:29",
-      "Arquivo de origem": "JAQUELINE-_SAC_inventario_DESKTOP-32AOGIM.xlsx"
+      "Arquivo de origem": "JAQUELINE-_SAC_inventario_DESKTOP-32AOGIM.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 24,
@@ -449,7 +475,8 @@
       "RAM": 8,
       "Disco": 480,
       "Coleta": "2026-10-06 09:28:44",
-      "Arquivo de origem": "MILENA-_SAC_inventario_DESKTOP-UN398I7.xlsx"
+      "Arquivo de origem": "MILENA-_SAC_inventario_DESKTOP-UN398I7.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 25,
@@ -467,7 +494,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-06 09:25:15",
-      "Arquivo de origem": "TAIS-_SAC_inventario_DESKTOP-5HN2CMB.xlsx"
+      "Arquivo de origem": "TAIS-_SAC_inventario_DESKTOP-5HN2CMB.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 26,
@@ -485,7 +513,8 @@
       "RAM": 16,
       "Disco": 1000,
       "Coleta": "2026-10-06 09:34:21",
-      "Arquivo de origem": "THAIS__SAC__DESKTOP-I38DR5F.xlsx"
+      "Arquivo de origem": "THAIS__SAC__DESKTOP-I38DR5F.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 27,
@@ -503,7 +532,8 @@
       "RAM": 4,
       "Disco": 256,
       "Coleta": "2026-10-06 09:32:35",
-      "Arquivo de origem": "VANESSA-_SAC__DESKTOP-J0GU2VF.xlsx"
+      "Arquivo de origem": "VANESSA-_SAC__DESKTOP-J0GU2VF.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 28,
@@ -521,7 +551,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-06 09:30:14",
-      "Arquivo de origem": "VITORIA-_SAC__DESKTOP-SJ49F2Q.xlsx"
+      "Arquivo de origem": "VITORIA-_SAC__DESKTOP-SJ49F2Q.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 29,
@@ -539,7 +570,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-07 10:21:43",
-      "Arquivo de origem": "ALAM-_PLANEJAMENTO_inventario_DESKTOP-FRL3ME9.xlsx"
+      "Arquivo de origem": "ALAM-_PLANEJAMENTO_inventario_DESKTOP-FRL3ME9.xlsx",
+      "Status patrimonial": "Alugada"
     },
     {
       "Nº": 30,
@@ -557,7 +589,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-10-07 10:12:57",
-      "Arquivo de origem": "ALINE-_PLANEJAMENTO_inventario_DESKTOP-LFJEHBE.xlsx"
+      "Arquivo de origem": "ALINE-_PLANEJAMENTO_inventario_DESKTOP-LFJEHBE.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 31,
@@ -575,7 +608,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-07 10:15:38",
-      "Arquivo de origem": "GIOVANNA-_PLANEJAMENTO_-_inventario_DESKTOP-FRL3ME9.xlsx"
+      "Arquivo de origem": "GIOVANNA-_PLANEJAMENTO_-_inventario_DESKTOP-FRL3ME9.xlsx",
+      "Status patrimonial": "Alugada"
     },
     {
       "Nº": 32,
@@ -593,7 +627,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-10-07 10:17:41",
-      "Arquivo de origem": "HENRIQUE-_PENDENCIAS_-PLANEJAMENTO__inventario_.xlsx"
+      "Arquivo de origem": "HENRIQUE-_PENDENCIAS_-PLANEJAMENTO__inventario_.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 33,
@@ -611,7 +646,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-07 10:20:26",
-      "Arquivo de origem": "LARISSA-_PLANEJMAENTO_inventario_larrys-place.xlsx"
+      "Arquivo de origem": "LARISSA-_PLANEJMAENTO_inventario_larrys-place.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 34,
@@ -629,7 +665,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-07 10:11:40",
-      "Arquivo de origem": "MARCUS-_PLANEJAMENTO_-inventario_DESKTOP-FRL3ME9.xlsx"
+      "Arquivo de origem": "MARCUS-_PLANEJAMENTO_-inventario_DESKTOP-FRL3ME9.xlsx",
+      "Status patrimonial": "Alugada"
     },
     {
       "Nº": 35,
@@ -647,7 +684,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-07 10:16:03",
-      "Arquivo de origem": "WELLINGTON-JUCA-_PLANEJAMENTO_inventario_DESKTOP-FBUB85O.xlsx"
+      "Arquivo de origem": "WELLINGTON-JUCA-_PLANEJAMENTO_inventario_DESKTOP-FBUB85O.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 36,
@@ -665,7 +703,8 @@
       "RAM": 8,
       "Disco": 240,
       "Coleta": "2026-09-29 16:54:15",
-      "Arquivo de origem": "CESAR-_FROTA__inventario_Joyce.xlsx"
+      "Arquivo de origem": "CESAR-_FROTA__inventario_Joyce.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 37,
@@ -683,7 +722,8 @@
       "RAM": 16,
       "Disco": 240,
       "Coleta": "2026-09-29 16:57:43",
-      "Arquivo de origem": "GUSTAVO-_FROTA__inventario_DESKTOP-46VSJEM.xlsx"
+      "Arquivo de origem": "GUSTAVO-_FROTA__inventario_DESKTOP-46VSJEM.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 38,
@@ -701,7 +741,8 @@
       "RAM": 4,
       "Disco": 240,
       "Coleta": "2026-09-29 16:02:39",
-      "Arquivo de origem": "LUIS-_FROTA__inventario_DESKTOP-AE82H9N.xlsx"
+      "Arquivo de origem": "LUIS-_FROTA__inventario_DESKTOP-AE82H9N.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 39,
@@ -719,7 +760,8 @@
       "RAM": 8,
       "Disco": 240,
       "Coleta": "2026-09-29 16:27:42",
-      "Arquivo de origem": "MARCOS-SEGURANCA-_FROTA__inventario_DESKTOP-VQGL8N0.xlsx"
+      "Arquivo de origem": "MARCOS-SEGURANCA-_FROTA__inventario_DESKTOP-VQGL8N0.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 40,
@@ -737,7 +779,8 @@
       "RAM": 4,
       "Disco": 256,
       "Coleta": "2026-09-29 16:18:35",
-      "Arquivo de origem": "PEDRO-_FROTA__inventario_DESKTOP-NG08EGO.xlsx"
+      "Arquivo de origem": "PEDRO-_FROTA__inventario_DESKTOP-NG08EGO.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 41,
@@ -755,7 +798,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-07 08:57:16",
-      "Arquivo de origem": "BIANCA-_FINANCEIRO_inventario_DESKTOP-FRL3ME9.xlsx"
+      "Arquivo de origem": "BIANCA-_FINANCEIRO_inventario_DESKTOP-FRL3ME9.xlsx",
+      "Status patrimonial": "Alugada"
     },
     {
       "Nº": 42,
@@ -773,7 +817,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-07 08:59:14",
-      "Arquivo de origem": "PALOMA-_FINANCEIRO_inventario_DESKTOP-3ECAMOL.xlsx"
+      "Arquivo de origem": "PALOMA-_FINANCEIRO_inventario_DESKTOP-3ECAMOL.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 43,
@@ -791,7 +836,8 @@
       "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-10-07 08:58:10",
-      "Arquivo de origem": "TAMIRES-_FINANCEIRO_inventario_DESKTOP-FRL3ME9.xlsx"
+      "Arquivo de origem": "TAMIRES-_FINANCEIRO_inventario_DESKTOP-FRL3ME9.xlsx",
+      "Status patrimonial": "Alugada"
     },
     {
       "Nº": 44,
@@ -809,7 +855,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-07 08:59:52",
-      "Arquivo de origem": "THAIS-_FINANCEIRO_inventario_DESKTOP-0G4F48H.xlsx"
+      "Arquivo de origem": "THAIS-_FINANCEIRO_inventario_DESKTOP-0G4F48H.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 45,
@@ -827,7 +874,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-09-29 17:17:23",
-      "Arquivo de origem": "ANDERSON-_EXPEDICAO-DOCA19__inventario_DESKTOP-EICOL4U.xlsx"
+      "Arquivo de origem": "ANDERSON-_EXPEDICAO-DOCA19__inventario_DESKTOP-EICOL4U.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 46,
@@ -845,7 +893,8 @@
       "RAM": 8,
       "Disco": 120,
       "Coleta": "2026-09-29 17:24:47",
-      "Arquivo de origem": "PC-_EXPEDICAO-DOCA19-ENTRADA__inventario_OPERACIONAL.xlsx"
+      "Arquivo de origem": "PC-_EXPEDICAO-DOCA19-ENTRADA__inventario_OPERACIONAL.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 47,
@@ -863,7 +912,8 @@
       "RAM": 4,
       "Disco": 240,
       "Coleta": "2026-09-29 17:09:00",
-      "Arquivo de origem": "PC-_EXPEDICAO-FROTA-DOCA18__inventario_DESKTOP-46VSJEM.xlsx"
+      "Arquivo de origem": "PC-_EXPEDICAO-FROTA-DOCA18__inventario_DESKTOP-46VSJEM.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 48,
@@ -881,7 +931,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-09-29 11:27:56",
-      "Arquivo de origem": "DIEGO-_OPERACIONAL__inventario_DESKTOP-FRL3ME9.xlsx"
+      "Arquivo de origem": "DIEGO-_OPERACIONAL__inventario_DESKTOP-FRL3ME9.xlsx",
+      "Status patrimonial": "Alugada"
     },
     {
       "Nº": 49,
@@ -899,7 +950,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-06 09:47:08",
-      "Arquivo de origem": "FELIPE-_OPERAÇÕES-DOCA18_inventario_LAPTOP-I0N7J2F0.xlsx"
+      "Arquivo de origem": "FELIPE-_OPERAÇÕES-DOCA18_inventario_LAPTOP-I0N7J2F0.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 50,
@@ -914,10 +966,11 @@
       "Threads": 8,
       "Sistema": "Windows 10",
       "Build": "10.0.19045",
-      "RAM": 20,
+      "RAM": 16,
       "Disco": 256,
       "Coleta": "2026-09-29 12:04:58",
-      "Arquivo de origem": "BRUNNO_NASCIMENTO_-__T_I__inventario_DESKTOP-247T653.xlsx"
+      "Arquivo de origem": "BRUNNO_NASCIMENTO_-__T_I__inventario_DESKTOP-247T653.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 51,
@@ -935,7 +988,8 @@
       "RAM": 12,
       "Disco": 480,
       "Coleta": "2026-09-29 11:19:41",
-      "Arquivo de origem": "CARLOS_NASCIMENTO_-__T_I__inventario_DESKTOP-PCF3JV5.xlsx"
+      "Arquivo de origem": "CARLOS_NASCIMENTO_-__T_I__inventario_DESKTOP-PCF3JV5.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 52,
@@ -953,7 +1007,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-10-06 11:41:01",
-      "Arquivo de origem": "YAN-_T_I__DESKTOP-FRL3ME9.xlsx"
+      "Arquivo de origem": "YAN-_T_I__DESKTOP-FRL3ME9.xlsx",
+      "Status patrimonial": "Alugada"
     },
     {
       "Nº": 53,
@@ -971,7 +1026,8 @@
       "RAM": 8,
       "Disco": 256,
       "Coleta": "2026-10-07 09:05:12",
-      "Arquivo de origem": "ADRIELLE-_RH_inventario_DESKTOP-KJKAFPP.xlsx"
+      "Arquivo de origem": "ADRIELLE-_RH_inventario_DESKTOP-KJKAFPP.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 54,
@@ -989,7 +1045,8 @@
       "RAM": 8,
       "Disco": 240,
       "Coleta": "2026-10-07 09:06:38",
-      "Arquivo de origem": "STEPHANY-_RH_inventario_DELL.xlsx"
+      "Arquivo de origem": "STEPHANY-_RH_inventario_DELL.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 55,
@@ -1007,7 +1064,8 @@
       "RAM": 16,
       "Disco": 512,
       "Coleta": "2026-09-29 14:30:39",
-      "Arquivo de origem": "MICHELE-_DIRETORIA__inventario_DESKTOP-P3OR8EJ.xlsx"
+      "Arquivo de origem": "MICHELE-_DIRETORIA__inventario_DESKTOP-P3OR8EJ.xlsx",
+      "Status patrimonial": "Patrimônio"
     },
     {
       "Nº": 56,
@@ -1025,7 +1083,198 @@
       "RAM": 8,
       "Disco": 240,
       "Coleta": "2026-10-02 17:44:29",
-      "Arquivo de origem": "FERNANDA-_FARMA__inventario_ULTRA.xlsx"
+      "Arquivo de origem": "FERNANDA-_FARMA__inventario_ULTRA.xlsx",
+      "Status patrimonial": "Patrimônio"
+    },
+    {
+      "Nº": 57,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-08 12:04:54",
+      "Arquivo de origem": "USOALUGUEL -(01)inventario_DESKTOP-2DFSDN5",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 58,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-08 12:04:54",
+      "Arquivo de origem": "USOALUGUEL- (02)inventario_DESKTOP-5RN0FES",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 59,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-08 12:04:54",
+      "Arquivo de origem": "USOALUGUEL- (03)inventario_DESKTOP-D3PDVPF",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 60,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-08 12:04:54",
+      "Arquivo de origem": "USOALUGUEL-(04)inventario_DESKTOP-6L1FOR7",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 61,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-08 12:04:54",
+      "Arquivo de origem": "USOALUGUEL-(05)inventario_DESKTOP-36JCJHF",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 62,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-08 12:04:54",
+      "Arquivo de origem": "USOALUGUEL-(06)inventario_DESKTOP-INP9TB5",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 63,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-09 09:00:00",
+      "Arquivo de origem": "USOALUGUEL-(07)inventario_DESKTOP-A5BMG2O",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 64,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-09 09:00:00",
+      "Arquivo de origem": "USOALUGUEL(08)inventario_DESKTOP-LD9SQ8P",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 65,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-09 09:00:00",
+      "Arquivo de origem": "USOALUGUEL-(09)inventario_DESKTOP-HMIAG0G",
+      "Status patrimonial": "Alugada"
+    },
+    {
+      "Nº": 66,
+      "Filial": "SAO FITTIPALDI - INTERCARGAS - FITTIPALDI",
+      "Setor": "ALUGUEL",
+      "Localização": "—",
+      "Responsável": "ALUGUEL - T.I",
+      "Hostname": "USO",
+      "Usuário": "ALUGUEL - T.I",
+      "Processador": "Intel(R) Core(TM) i5-10210U CPU @ 1.60GHz",
+      "Núcleos": 4,
+      "Threads": 8,
+      "Sistema": "Windows 11",
+      "Build": "10.0.26200",
+      "RAM": 20,
+      "Disco": 240,
+      "Coleta": "2026-10-09 09:00:00",
+      "Arquivo de origem": "USOALUGUEL-(10)inventario_DESKTOP-VNL1IO4",
+      "Status patrimonial": "Alugada"
     }
   ]
 }
