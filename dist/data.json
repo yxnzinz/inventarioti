@@ -19,7 +19,8 @@
     "Disco",
     "Coleta",
     "Arquivo de origem",
-    "Status patrimonial"
+    "Status patrimonial",
+    "Patrimônio"
   ],
   "rows": [
     {
@@ -39,7 +40,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 08:52:49",
       "Arquivo de origem": "ANDRESSA-_COMERCIAL_inventario_LAPTOP-MPB77MLG.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 2,
@@ -58,7 +60,8 @@
       "Disco": 512,
       "Coleta": "2026-10-07 08:51:07",
       "Arquivo de origem": "BEATRIZ-_COMERCIAL_inventario_DESKTOP-E2QTOJ5.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 3,
@@ -77,7 +80,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 08:54:31",
       "Arquivo de origem": "DANIELE-_COMERCIAL_inventario_DESKTOP-VJV6KTM.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 4,
@@ -96,7 +100,8 @@
       "Disco": 240,
       "Coleta": "2026-10-07 08:43:44",
       "Arquivo de origem": "FERREIRA-_COMERCIAL_inventario_DESKTOP-2JEGCFK.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 5,
@@ -115,7 +120,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 08:47:49",
       "Arquivo de origem": "GEOVANA-_COMERCIAL_inventario_DESKTOP-KF3KIC2.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 6,
@@ -134,7 +140,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 08:45:18",
       "Arquivo de origem": "HELIO-_COMERCIAL_inventario_DESKTOP-PKTRNRL.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 7,
@@ -153,7 +160,8 @@
       "Disco": 240,
       "Coleta": "2026-10-07 08:44:15",
       "Arquivo de origem": "KARLA-_COMERCIAL_INVENTARIO.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 8,
@@ -172,7 +180,8 @@
       "Disco": 120,
       "Coleta": "2026-10-07 08:50:44",
       "Arquivo de origem": "PATRICIA-_COMERCIAL_inventario_DESKTOP-6C29UA1.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 9,
@@ -191,7 +200,8 @@
       "Disco": 240,
       "Coleta": "2026-09-30 11:49:52",
       "Arquivo de origem": "SAMANTHA-_COMERCIAL-PROMOCIONAL__inventario_DESKTOP-Q52EF0R.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 10,
@@ -210,7 +220,8 @@
       "Disco": 240,
       "Coleta": "2026-10-07 10:50:00",
       "Arquivo de origem": "—",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 11,
@@ -229,7 +240,8 @@
       "Disco": 512,
       "Coleta": "2026-10-05 08:21:01",
       "Arquivo de origem": "BRUNA-_OPERAÇÕES_inventario_DESKTOP-43JEC7L.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 12,
@@ -248,7 +260,8 @@
       "Disco": 512,
       "Coleta": "2026-10-05 08:24:16",
       "Arquivo de origem": "BRUNA2-_OPERAÇÕES_inventario_DESKTOP-DDN4N59.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 13,
@@ -267,7 +280,8 @@
       "Disco": 256,
       "Coleta": "2026-10-05 09:41:09",
       "Arquivo de origem": "DAVISON_OPERAÇÕES_inventario_DESKTOP-UFROS0O.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 14,
@@ -286,7 +300,8 @@
       "Disco": 240,
       "Coleta": "2026-10-02 17:23:29",
       "Arquivo de origem": "GIOVANI-_OPERAÇÕES__inventario_Inter01.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 15,
@@ -305,7 +320,8 @@
       "Disco": 240,
       "Coleta": "2026-10-02 17:13:07",
       "Arquivo de origem": "GUILHERME-_OPERAÇÕES__inventario_Operacional05.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 16,
@@ -324,7 +340,8 @@
       "Disco": 120,
       "Coleta": "2026-10-05 09:43:55",
       "Arquivo de origem": "JAIR-_OPERAÇÕES_inventario_DESKTOP-ADCMA3B.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 17,
@@ -343,7 +360,8 @@
       "Disco": 240,
       "Coleta": "2026-10-02 17:11:00",
       "Arquivo de origem": "MONITORAMENTO-_OPERAÇÕES__inventario_DESKTOP-1QCL13D.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 18,
@@ -362,7 +380,8 @@
       "Disco": 512,
       "Coleta": "2026-09-29 11:31:00",
       "Arquivo de origem": "SHEILA-_OPERAÇÕES__inventario_DESKTOP-4KU5E2C.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 19,
@@ -381,7 +400,8 @@
       "Disco": 120,
       "Coleta": "2026-10-05 08:23:42",
       "Arquivo de origem": "STHER-_OPERAÇÕES_inventario_DESKTOP-7MD2SIR.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 20,
@@ -400,7 +420,8 @@
       "Disco": 256,
       "Coleta": "2026-10-06 09:31:14",
       "Arquivo de origem": "CAROLINE-_SAC_inventario_Caroline-Facundo.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 21,
@@ -419,7 +440,8 @@
       "Disco": 256,
       "Coleta": "2026-10-06 09:26:39",
       "Arquivo de origem": "GLEICE_-_SAC__DESKTOP-FRL3ME9.xlsx",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": null
     },
     {
       "Nº": 22,
@@ -438,7 +460,8 @@
       "Disco": 256,
       "Coleta": "2026-10-06 09:26:41",
       "Arquivo de origem": "ISADORA-_SAC_inventario_DESKTOP-IV24H65.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 23,
@@ -457,7 +480,8 @@
       "Disco": 256,
       "Coleta": "2026-10-06 09:32:29",
       "Arquivo de origem": "JAQUELINE-_SAC_inventario_DESKTOP-32AOGIM.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 24,
@@ -476,7 +500,8 @@
       "Disco": 480,
       "Coleta": "2026-10-06 09:28:44",
       "Arquivo de origem": "MILENA-_SAC_inventario_DESKTOP-UN398I7.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 25,
@@ -495,7 +520,8 @@
       "Disco": 256,
       "Coleta": "2026-10-06 09:25:15",
       "Arquivo de origem": "TAIS-_SAC_inventario_DESKTOP-5HN2CMB.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 26,
@@ -514,7 +540,8 @@
       "Disco": 1000,
       "Coleta": "2026-10-06 09:34:21",
       "Arquivo de origem": "THAIS__SAC__DESKTOP-I38DR5F.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 27,
@@ -533,7 +560,8 @@
       "Disco": 256,
       "Coleta": "2026-10-06 09:32:35",
       "Arquivo de origem": "VANESSA-_SAC__DESKTOP-J0GU2VF.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 28,
@@ -552,7 +580,8 @@
       "Disco": 256,
       "Coleta": "2026-10-06 09:30:14",
       "Arquivo de origem": "VITORIA-_SAC__DESKTOP-SJ49F2Q.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 29,
@@ -571,7 +600,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 10:21:43",
       "Arquivo de origem": "ALAM-_PLANEJAMENTO_inventario_DESKTOP-FRL3ME9.xlsx",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": null
     },
     {
       "Nº": 30,
@@ -590,7 +620,8 @@
       "Disco": 512,
       "Coleta": "2026-10-07 10:12:57",
       "Arquivo de origem": "ALINE-_PLANEJAMENTO_inventario_DESKTOP-LFJEHBE.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 31,
@@ -609,7 +640,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 10:15:38",
       "Arquivo de origem": "GIOVANNA-_PLANEJAMENTO_-_inventario_DESKTOP-FRL3ME9.xlsx",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": null
     },
     {
       "Nº": 32,
@@ -628,7 +660,8 @@
       "Disco": 512,
       "Coleta": "2026-10-07 10:17:41",
       "Arquivo de origem": "HENRIQUE-_PENDENCIAS_-PLANEJAMENTO__inventario_.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 33,
@@ -647,7 +680,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 10:20:26",
       "Arquivo de origem": "LARISSA-_PLANEJMAENTO_inventario_larrys-place.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 34,
@@ -666,7 +700,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 10:11:40",
       "Arquivo de origem": "MARCUS-_PLANEJAMENTO_-inventario_DESKTOP-FRL3ME9.xlsx",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": null
     },
     {
       "Nº": 35,
@@ -685,7 +720,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 10:16:03",
       "Arquivo de origem": "WELLINGTON-JUCA-_PLANEJAMENTO_inventario_DESKTOP-FBUB85O.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 36,
@@ -704,7 +740,8 @@
       "Disco": 240,
       "Coleta": "2026-09-29 16:54:15",
       "Arquivo de origem": "CESAR-_FROTA__inventario_Joyce.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 37,
@@ -723,7 +760,8 @@
       "Disco": 240,
       "Coleta": "2026-09-29 16:57:43",
       "Arquivo de origem": "GUSTAVO-_FROTA__inventario_DESKTOP-46VSJEM.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 38,
@@ -742,7 +780,8 @@
       "Disco": 240,
       "Coleta": "2026-09-29 16:02:39",
       "Arquivo de origem": "LUIS-_FROTA__inventario_DESKTOP-AE82H9N.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 39,
@@ -761,7 +800,8 @@
       "Disco": 240,
       "Coleta": "2026-09-29 16:27:42",
       "Arquivo de origem": "MARCOS-SEGURANCA-_FROTA__inventario_DESKTOP-VQGL8N0.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 40,
@@ -780,7 +820,8 @@
       "Disco": 256,
       "Coleta": "2026-09-29 16:18:35",
       "Arquivo de origem": "PEDRO-_FROTA__inventario_DESKTOP-NG08EGO.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 41,
@@ -799,7 +840,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 08:57:16",
       "Arquivo de origem": "BIANCA-_FINANCEIRO_inventario_DESKTOP-FRL3ME9.xlsx",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": null
     },
     {
       "Nº": 42,
@@ -818,7 +860,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 08:59:14",
       "Arquivo de origem": "PALOMA-_FINANCEIRO_inventario_DESKTOP-3ECAMOL.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 43,
@@ -837,7 +880,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 08:58:10",
       "Arquivo de origem": "TAMIRES-_FINANCEIRO_inventario_DESKTOP-FRL3ME9.xlsx",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": null
     },
     {
       "Nº": 44,
@@ -856,7 +900,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 08:59:52",
       "Arquivo de origem": "THAIS-_FINANCEIRO_inventario_DESKTOP-0G4F48H.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 45,
@@ -875,7 +920,8 @@
       "Disco": 512,
       "Coleta": "2026-09-29 17:17:23",
       "Arquivo de origem": "ANDERSON-_EXPEDICAO-DOCA19__inventario_DESKTOP-EICOL4U.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 46,
@@ -894,7 +940,8 @@
       "Disco": 120,
       "Coleta": "2026-09-29 17:24:47",
       "Arquivo de origem": "PC-_EXPEDICAO-DOCA19-ENTRADA__inventario_OPERACIONAL.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 47,
@@ -913,7 +960,8 @@
       "Disco": 240,
       "Coleta": "2026-09-29 17:09:00",
       "Arquivo de origem": "PC-_EXPEDICAO-FROTA-DOCA18__inventario_DESKTOP-46VSJEM.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 48,
@@ -932,7 +980,8 @@
       "Disco": 512,
       "Coleta": "2026-09-29 11:27:56",
       "Arquivo de origem": "DIEGO-_OPERACIONAL__inventario_DESKTOP-FRL3ME9.xlsx",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": null
     },
     {
       "Nº": 49,
@@ -951,7 +1000,8 @@
       "Disco": 256,
       "Coleta": "2026-10-06 09:47:08",
       "Arquivo de origem": "FELIPE-_OPERAÇÕES-DOCA18_inventario_LAPTOP-I0N7J2F0.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 50,
@@ -970,7 +1020,8 @@
       "Disco": 256,
       "Coleta": "2026-09-29 12:04:58",
       "Arquivo de origem": "BRUNNO_NASCIMENTO_-__T_I__inventario_DESKTOP-247T653.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 51,
@@ -989,7 +1040,8 @@
       "Disco": 480,
       "Coleta": "2026-09-29 11:19:41",
       "Arquivo de origem": "CARLOS_NASCIMENTO_-__T_I__inventario_DESKTOP-PCF3JV5.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 52,
@@ -1008,7 +1060,8 @@
       "Disco": 512,
       "Coleta": "2026-10-06 11:41:01",
       "Arquivo de origem": "YAN-_T_I__DESKTOP-FRL3ME9.xlsx",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": null
     },
     {
       "Nº": 53,
@@ -1027,7 +1080,8 @@
       "Disco": 256,
       "Coleta": "2026-10-07 09:05:12",
       "Arquivo de origem": "ADRIELLE-_RH_inventario_DESKTOP-KJKAFPP.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 54,
@@ -1046,7 +1100,8 @@
       "Disco": 240,
       "Coleta": "2026-10-07 09:06:38",
       "Arquivo de origem": "STEPHANY-_RH_inventario_DELL.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 55,
@@ -1065,7 +1120,8 @@
       "Disco": 512,
       "Coleta": "2026-09-29 14:30:39",
       "Arquivo de origem": "MICHELE-_DIRETORIA__inventario_DESKTOP-P3OR8EJ.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 56,
@@ -1084,7 +1140,8 @@
       "Disco": 240,
       "Coleta": "2026-10-02 17:44:29",
       "Arquivo de origem": "FERNANDA-_FARMA__inventario_ULTRA.xlsx",
-      "Status patrimonial": "Patrimônio"
+      "Status patrimonial": "Patrimônio",
+      "Patrimônio": null
     },
     {
       "Nº": 57,
@@ -1103,7 +1160,8 @@
       "Disco": 240,
       "Coleta": "2026-10-08 12:04:54",
       "Arquivo de origem": "USOALUGUEL -(01)inventario_DESKTOP-2DFSDN5",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "533"
     },
     {
       "Nº": 58,
@@ -1122,7 +1180,8 @@
       "Disco": 240,
       "Coleta": "2026-10-08 12:04:54",
       "Arquivo de origem": "USOALUGUEL- (02)inventario_DESKTOP-5RN0FES",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "534"
     },
     {
       "Nº": 59,
@@ -1141,7 +1200,8 @@
       "Disco": 240,
       "Coleta": "2026-10-08 12:04:54",
       "Arquivo de origem": "USOALUGUEL- (03)inventario_DESKTOP-D3PDVPF",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "535"
     },
     {
       "Nº": 60,
@@ -1160,7 +1220,8 @@
       "Disco": 240,
       "Coleta": "2026-10-08 12:04:54",
       "Arquivo de origem": "USOALUGUEL-(04)inventario_DESKTOP-6L1FOR7",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "536"
     },
     {
       "Nº": 61,
@@ -1179,7 +1240,8 @@
       "Disco": 240,
       "Coleta": "2026-10-08 12:04:54",
       "Arquivo de origem": "USOALUGUEL-(05)inventario_DESKTOP-36JCJHF",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "537"
     },
     {
       "Nº": 62,
@@ -1198,7 +1260,8 @@
       "Disco": 240,
       "Coleta": "2026-10-08 12:04:54",
       "Arquivo de origem": "USOALUGUEL-(06)inventario_DESKTOP-INP9TB5",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "538"
     },
     {
       "Nº": 63,
@@ -1217,7 +1280,8 @@
       "Disco": 240,
       "Coleta": "2026-10-09 09:00:00",
       "Arquivo de origem": "USOALUGUEL-(07)inventario_DESKTOP-A5BMG2O",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "539"
     },
     {
       "Nº": 64,
@@ -1236,7 +1300,8 @@
       "Disco": 240,
       "Coleta": "2026-10-09 09:00:00",
       "Arquivo de origem": "USOALUGUEL(08)inventario_DESKTOP-LD9SQ8P",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "540"
     },
     {
       "Nº": 65,
@@ -1255,7 +1320,8 @@
       "Disco": 240,
       "Coleta": "2026-10-09 09:00:00",
       "Arquivo de origem": "USOALUGUEL-(09)inventario_DESKTOP-HMIAG0G",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "541"
     },
     {
       "Nº": 66,
@@ -1274,7 +1340,8 @@
       "Disco": 240,
       "Coleta": "2026-10-09 09:00:00",
       "Arquivo de origem": "USOALUGUEL-(10)inventario_DESKTOP-VNL1IO4",
-      "Status patrimonial": "Alugada"
+      "Status patrimonial": "Alugada",
+      "Patrimônio": "542"
     }
   ]
 }

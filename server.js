@@ -9,11 +9,13 @@ const PORT = Number(process.env.PORT || 3000);
 const MAX_ROWS = 50000;
 const REQUIRED_HEADERS = ['Nº','Filial','Setor','Localização','Responsável','Hostname','Usuário','Processador','Núcleos','Threads','Sistema','Build','RAM','Disco','Coleta','Arquivo de origem'];
 const STATUS_HEADER = 'Status patrimonial';
+const ASSET_HEADER = 'Patrimônio';
 const STATUS_VALUES = ['Alugada', 'Patrimônio', 'Pessoal'];
 const STATUS_ALIASES = ['status patrimonial','status do ativo','tipo de patrimonio','tipo de patrimônio','tipo de ativo','situacao patrimonial','situação patrimonial','propriedade','posse','alugado','alugada','locado','locada'];
 function normalizeLabel(value) { return String(value ?? '').trim().toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 function findStatusHeader(headers) { return headers.find((h) => STATUS_ALIASES.includes(normalizeLabel(h)) || normalizeLabel(h).includes('alugad') || normalizeLabel(h).includes('locad')); }
 function normalizeSector(value) { const label = normalizeLabel(value); return ['alugado','alugada','aluguel'].includes(label) ? 'ALUGUEL' : String(value ?? '').trim(); }
+function extractAssetNumber(value) { const text = String(value ?? '').trim(); if(/^\d+$/.test(text)) return text; const match = text.match(/patrim(?:o|ô)nio\s*[:\/\-]?\s*(?:n[º°o]?|numero|número)?\s*[:#-]?\s*(\d+)/i) || text.match(/(?:aluguel|alugada|alugado).*?(\d+)\s*$/i); return match ? String(match[1]) : null; }
 function normalizeStatus(value, header = '') { const label = normalizeLabel(value); const headerLabel = normalizeLabel(header); if (label.includes('pessoal') || label.includes('usuario') || label.includes('usuário')) return 'Pessoal'; if ((headerLabel.includes('alug') || headerLabel.includes('locad')) && ['sim','yes','true','1'].includes(label)) return 'Alugada'; return label.includes('alug') || label.includes('locad') ? 'Alugada' : 'Patrimônio'; }
 let pool;
 
@@ -50,11 +52,13 @@ function validatePayload(payload) {
   const missing = REQUIRED_HEADERS.filter((h) => !headers.includes(h));
   if (missing.length) throw new Error(`Colunas obrigatórias ausentes: ${missing.join(', ')}`);
   const statusHeader = findStatusHeader(headers) || STATUS_HEADER;
+  const assetHeader = headers.find((h) => normalizeLabel(h) === 'patrimonio' || normalizeLabel(h) === 'patrimônio' || normalizeLabel(h).includes('patrimonio'));
   const normalized = rows.map((row) => {
     const clean = {};
     for (const h of REQUIRED_HEADERS) clean[h] = row[h] ?? null;
     clean['Setor'] = normalizeSector(clean['Setor']);
     clean[STATUS_HEADER] = normalizeStatus(row[statusHeader], statusHeader);
+    clean[ASSET_HEADER] = extractAssetNumber(row[assetHeader] ?? row[statusHeader]);
     return clean;
   });
   return {
@@ -62,7 +66,7 @@ function validatePayload(payload) {
     SourceFile: String(payload.SourceFile || payload.sourceFile || 'importacao.xlsx'),
     ImportedAt: new Date().toISOString(),
     Count: normalized.length,
-    Headers: [...REQUIRED_HEADERS, STATUS_HEADER],
+    Headers: [...REQUIRED_HEADERS, STATUS_HEADER, ASSET_HEADER],
     Rows: normalized
   };
 }
@@ -82,15 +86,21 @@ async function initDb() {
   } else {
     const current = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
     const ids = new Set((current.Rows || []).map((row) => String(row['Nº'] ?? '')));
+    const seedById = new Map(seed.Rows.map((row) => [String(row['Nº'] ?? ''), row]));
     const additions = seed.Rows.filter((row) => row.Setor === 'ALUGUEL' && !ids.has(String(row['Nº'] ?? '')));
-    if (additions.length) {
-      current.Headers = Array.from(new Set([...(current.Headers || REQUIRED_HEADERS), STATUS_HEADER]));
+    let assetUpdates = 0;
+    (current.Rows || []).forEach((row) => {
+      const source = seedById.get(String(row['Nº'] ?? ''));
+      if (source?.[ASSET_HEADER] && row[ASSET_HEADER] !== source[ASSET_HEADER]) { row[ASSET_HEADER] = source[ASSET_HEADER]; assetUpdates++; }
+    });
+    if (additions.length || assetUpdates) {
+      current.Headers = Array.from(new Set([...(current.Headers || REQUIRED_HEADERS), STATUS_HEADER, ASSET_HEADER]));
       current.Rows = [...(current.Rows || []), ...additions];
       current.Count = current.Rows.length;
       current.SourceFile = seed.SourceFile;
       current.ImportedAt = seed.ImportedAt;
       await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(current), 'current']);
-      console.log(`Adicionados ${additions.length} equipamentos do setor ALUGUEL à base persistente.`);
+      console.log(`Base persistente atualizada: ${additions.length} equipamentos adicionados e ${assetUpdates} patrimônios preenchidos.`);
     }
   }
 }
