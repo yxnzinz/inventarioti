@@ -84,24 +84,8 @@ async function initDb() {
   if (!rows.length) {
     await pool.query('INSERT IGNORE INTO inventory_state (state_key, payload) VALUES (?, ?)', ['current', JSON.stringify(seed)]);
   } else {
-    let current = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
-    const ids = new Set((current.Rows || []).map((row) => String(row['Nº'] ?? '')));
-    const seedById = new Map(seed.Rows.map((row) => [String(row['Nº'] ?? ''), row]));
-    const additions = seed.Rows.filter((row) => !ids.has(String(row['Nº'] ?? '')));
-    let assetUpdates = 0;
-    (current.Rows || []).forEach((row) => {
-      const source = seedById.get(String(row['Nº'] ?? ''));
-      if (source?.[ASSET_HEADER] && row[ASSET_HEADER] !== source[ASSET_HEADER]) { row[ASSET_HEADER] = source[ASSET_HEADER]; assetUpdates++; }
-    });
-    if (additions.length || assetUpdates) {
-      current.Headers = Array.from(new Set([...(current.Headers || REQUIRED_HEADERS), STATUS_HEADER, ASSET_HEADER]));
-      current.Rows = [...(current.Rows || []), ...additions];
-      current.Count = current.Rows.length;
-      current.SourceFile = seed.SourceFile;
-      current.ImportedAt = seed.ImportedAt;
-      await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(current), 'current']);
-      console.log(`Base persistente atualizada: ${additions.length} equipamentos adicionados e ${assetUpdates} patrimônios preenchidos.`);
-    }
+    // A base existente é a fonte de verdade. Não reconciliar com data.json no reinício:
+    // isso preserva a última planilha importada, inclusive origem, data e registros.
   }
 }
 
