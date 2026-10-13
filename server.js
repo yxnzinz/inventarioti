@@ -84,8 +84,22 @@ async function initDb() {
   if (!rows.length) {
     await pool.query('INSERT IGNORE INTO inventory_state (state_key, payload) VALUES (?, ?)', ['current', JSON.stringify(seed)]);
   } else {
-    // A base existente é a fonte de verdade. Não reconciliar com data.json no reinício:
-    // isso preserva a última planilha importada, inclusive origem, data e registros.
+    const current = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
+    const currentRows = current.Rows || [];
+    const stale66 = currentRows.find((row) => String(row['Nº']) === '66');
+    const stale67 = currentRows.find((row) => String(row['Nº']) === '67');
+    const stale68 = currentRows.find((row) => String(row['Nº']) === '68');
+    const isKnownOldDuplicate = currentRows.length === seed.Rows.length + 1 &&
+      String(stale66?.[ASSET_HEADER] || '') === '542' &&
+      String(stale67?.[ASSET_HEADER] || '') === '542' &&
+      String(stale68?.Setor || '') === 'BACKUP' &&
+      String(stale68?.[ASSET_HEADER] || '') === '593';
+    if (isKnownOldDuplicate) {
+      await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(seed), 'current']);
+      console.log('Migração única aplicada: estado antigo com patrimônio 542 duplicado foi corrigido.');
+    }
+    // Fora dessa migração específica, a base existente é a fonte de verdade.
+    // Não reconciliar com data.json no reinício: preservar a última planilha importada.
   }
 }
 
