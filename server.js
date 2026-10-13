@@ -136,6 +136,29 @@ app.get('/api/inventory/latest', async (req, res) => {
   }
 });
 
+function branchStateKey(value) { return `branch:${String(value || 'outra-filial').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'outra-filial'}`; }
+
+app.get('/api/inventory/branch/latest', async (req, res) => {
+  try {
+    const key = branchStateKey(req.query.branch);
+    const [rows] = await pool.query('SELECT payload, updated_at FROM inventory_state WHERE state_key = ?', [key]);
+    if (!rows.length) return res.status(404).json({ error: 'Nenhuma base cadastrada para esta filial.' });
+    const payload = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
+    res.setHeader('Cache-Control', 'no-store');
+    res.json({ ...payload, UpdatedAt: rows[0].updated_at });
+  } catch (err) { res.status(500).json({ error: 'Falha ao consultar a base da filial.' }); }
+});
+
+app.post('/api/inventory/branch/import', requireImportToken, async (req, res) => {
+  try {
+    const payload = validatePayload(req.body);
+    payload.BranchName = String(req.body.BranchName || 'Outra filial').trim().slice(0, 120);
+    const key = branchStateKey(req.body.BranchKey);
+    await pool.query('INSERT INTO inventory_state (state_key, payload) VALUES (?, ?) ON DUPLICATE KEY UPDATE payload = VALUES(payload)', [key, JSON.stringify(payload)]);
+    res.status(200).json({ ok: true, count: payload.Count, importedAt: payload.ImportedAt, branchName: payload.BranchName });
+  } catch (err) { res.status(400).json({ error: err.message || 'Payload inválido.' }); }
+});
+
 app.post('/api/inventory/import', requireImportToken, async (req, res) => {
   try {
     const payload = validatePayload(req.body);
