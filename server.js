@@ -84,9 +84,19 @@ async function initDb() {
   if (!rows.length) {
     await pool.query('INSERT IGNORE INTO inventory_state (state_key, payload) VALUES (?, ?)', ['current', JSON.stringify(seed)]);
   } else {
-    const current = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
+    let current = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
     const ids = new Set((current.Rows || []).map((row) => String(row['Nº'] ?? '')));
     const seedById = new Map(seed.Rows.map((row) => [String(row['Nº'] ?? ''), row]));
+    const currentAssets = (current.Rows || []).map((row) => String(row[ASSET_HEADER] ?? '').trim()).filter(Boolean);
+    const seedAssets = seed.Rows.map((row) => String(row[ASSET_HEADER] ?? '').trim()).filter(Boolean);
+    const hasDuplicateAssets = new Set(currentAssets).size !== currentAssets.length;
+    const seedHasDuplicateAssets = new Set(seedAssets).size !== seedAssets.length;
+    if (hasDuplicateAssets && !seedHasDuplicateAssets && (current.Rows || []).length > seed.Rows.length) {
+      current = seed;
+      await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(current), 'current']);
+      console.log('Base persistente saneada: registros duplicados de patrimônio removidos.');
+      return;
+    }
     const additions = seed.Rows.filter((row) => !ids.has(String(row['Nº'] ?? '')));
     let assetUpdates = 0;
     (current.Rows || []).forEach((row) => {
