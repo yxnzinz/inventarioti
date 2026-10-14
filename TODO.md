@@ -10,3 +10,4 @@
 - Disponibilizar `POST /api/inventory/import` protegido por Bearer token, validando a estrutura antes de substituir a base.
 - Persistir a base atual em banco gerenciado e manter a versão anterior quando uma importação for rejeitada.
 - Adaptar o botão Importar XLSX para enviar a base validada à API e atualizar todos os usuários.
+- Adicionar a subaba Visão executiva na sidebar, com indicadores gerenciais, gráficos por setor e status patrimonial, alertas automáticos, leitura de infraestrutura e modo apresentação, mantendo a página principal operacional.
