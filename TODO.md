@@ -11,3 +11,4 @@
 - Persistir a base atual em banco gerenciado e manter a versão anterior quando uma importação for rejeitada.
 - Adaptar o botão Importar XLSX para enviar a base validada à API e atualizar todos os usuários.
 - Adicionar a subaba Visão executiva na sidebar, com indicadores gerenciais, gráficos por setor e status patrimonial, alertas automáticos, leitura de infraestrutura e modo apresentação, mantendo a página principal operacional.
+- Redefinir a identidade cromática de todo o site a partir do logotipo Intercargas: azul celeste `#2f77ad` para ações e nomes de setores, azul profundo para títulos/sidebar/textos institucionais, vermelho `#c53a3e` para alertas e acentos, fundos azulados claros e estados interativos com contraste legível.
