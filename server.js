@@ -84,6 +84,16 @@ async function initDb() {
     payload JSON NOT NULL,
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
   )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS inventory_history (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    state_key VARCHAR(64) NOT NULL,
+    action VARCHAR(40) NOT NULL,
+    source_file VARCHAR(255),
+    record_count INT NOT NULL DEFAULT 0,
+    summary JSON,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_inventory_history_state_date (state_key, created_at)
+  )`);
   const [rows] = await pool.query('SELECT state_key, payload FROM inventory_state WHERE state_key = ?', ['current']);
   const seed = validatePayload(JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8')));
   if (!rows.length) {
