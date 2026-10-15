@@ -20,3 +20,6 @@ A interface adota a linguagem cromática observada no logotipo fornecido: **azul
 - **Tom de voz:** direto e executivo; exemplos: “Recorte de análise” e “Leitura rápida da composição, cobertura e pontos de atenção”.
 - **Marca:** a sidebar conserva a lógica de um bloco institucional; o contraste azul-vermelho remete ao logotipo sem inserir a imagem com watermark na interface.
 - **Cor proprietária:** azul celeste `#2f77ad`, inspirado no azul dominante do logotipo.
+
+## Prévia segura de importação XLSX
+A seleção do arquivo não grava dados. O navegador valida a aba `BASE COMPLETA`, reconhece as colunas, normaliza status e patrimônio, compara a planilha com a base atual por número do equipamento/hostname e apresenta linhas, colunas reconhecidas, novos, alterados, removidos, avisos, erros e patrimônios duplicados. A atualização para todos só ocorre após o usuário revisar a prévia e confirmar com o token de importação.
