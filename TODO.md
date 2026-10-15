@@ -17,5 +17,4 @@
 - Abrir ficha completa do equipamento ao clicar em uma máquina, preservando os dados individuais e permitindo revisar seus status.
 - Disponibilizar status operacional independente da classificação patrimonial: Ativo, Em manutenção, Reserva, Backup, Desativado, Em substituição e Aguardando setor.
 - Adicionar pesquisa rápida por nome, patrimônio, hostname, setor, sistema e demais campos da base.
-- Exibir uma página de permissões com os perfis Administrador, Tecnologia, Gestor e Consulta, mantendo mutações protegidas pelo token do servidor.
 - Disponibilizar relatório executivo do recorte atual com ação para gerar/salvar em PDF pelo navegador.
