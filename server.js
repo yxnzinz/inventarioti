@@ -11,7 +11,7 @@ const REQUIRED_HEADERS = ['Nº','Filial','Setor','Localização','Responsável',
 const STATUS_HEADER = 'Status patrimonial';
 const ASSET_HEADER = 'Patrimônio';
 const OPERATIONAL_STATUS_HEADER = 'Status operacional';
-const OPERATIONAL_STATUS_VALUES = ['Ativo', 'Em manutenção', 'Reserva', 'Backup', 'Desativado', 'Em substituição', 'Aguardando setor'];
+const OPERATIONAL_STATUS_VALUES = ['Ativo', 'Em manutenção', 'Reserva', 'Backup', 'Desativado', 'Em substituição', 'Aguardando definição de setor'];
 const STATUS_VALUES = ['Alugada', 'Patrimônio', 'Pessoal'];
 const STATUS_ALIASES = ['status patrimonial','status do ativo','tipo de patrimonio','tipo de patrimônio','tipo de ativo','situacao patrimonial','situação patrimonial','propriedade','posse','alugado','alugada','locado','locada'];
 function normalizeLabel(value) { return String(value ?? '').trim().toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
@@ -19,7 +19,7 @@ function findStatusHeader(headers) { return headers.find((h) => STATUS_ALIASES.i
 function normalizeSector(value) { const label = normalizeLabel(value); return ['alugado','alugada','aluguel'].includes(label) ? 'ALUGUEL' : String(value ?? '').trim(); }
 function extractAssetNumber(value) { const text = String(value ?? '').trim(); if(/^\d+$/.test(text)) return text; const match = text.match(/patrim(?:o|ô)nio\s*[:\/\-]?\s*(?:n[º°o]?|numero|número)?\s*[:#-]?\s*(\d+)/i) || text.match(/(?:aluguel|alugada|alugado).*?(\d+)\s*$/i); return match ? String(match[1]) : null; }
 function normalizeStatus(value, header = '') { const label = normalizeLabel(value); const headerLabel = normalizeLabel(header); if (label.includes('pessoal') || label.includes('usuario') || label.includes('usuário')) return 'Pessoal'; if ((headerLabel.includes('alug') || headerLabel.includes('locad')) && ['sim','yes','true','1'].includes(label)) return 'Alugada'; return label.includes('alug') || label.includes('locad') ? 'Alugada' : 'Patrimônio'; }
-function normalizeOperationalStatus(value) { const label = normalizeLabel(value); const aliases = { ativo: 'Ativo', 'em manutencao': 'Em manutenção', manutencao: 'Em manutenção', reserva: 'Reserva', backup: 'Backup', desativado: 'Desativado', 'em substituicao': 'Em substituição', 'aguardando setor': 'Aguardando setor', 'aguardando definicao de setor': 'Aguardando setor' }; return aliases[label] || 'Ativo'; }
+function normalizeOperationalStatus(value) { const label = normalizeLabel(value); const aliases = { ativo: 'Ativo', 'em manutencao': 'Em manutenção', manutencao: 'Em manutenção', reserva: 'Reserva', backup: 'Backup', desativado: 'Desativado', 'em substituicao': 'Em substituição', 'aguardando setor': 'Aguardando definição de setor', 'aguardando definicao de setor': 'Aguardando definição de setor' }; return aliases[label] || 'Ativo'; }
 let pool;
 
 app.use(express.json({ limit: '15mb' }));
