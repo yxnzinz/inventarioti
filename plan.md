@@ -23,3 +23,6 @@ A interface adota a linguagem cromática observada no logotipo fornecido: **azul
 
 ## Prévia segura de importação XLSX
 A seleção do arquivo não grava dados. O navegador valida a aba `BASE COMPLETA`, reconhece as colunas, normaliza status e patrimônio, compara a planilha com a base atual por número do equipamento/hostname e apresenta linhas, colunas reconhecidas, novos, alterados, removidos, avisos, erros e patrimônios duplicados. A atualização para todos só ocorre após o usuário revisar a prévia e confirmar com o token de importação.
+
+## Camada operacional complementar
+O painel passa a oferecer pesquisa rápida por campos do equipamento, ficha detalhada em modal, status operacional independente da classificação patrimonial, histórico persistente de importações e alterações de status, página de permissões com os perfis operacionais, e relatório executivo imprimível/salvável em PDF respeitando os filtros ativos.

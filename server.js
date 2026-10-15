@@ -10,6 +10,8 @@ const MAX_ROWS = 50000;
 const REQUIRED_HEADERS = ['Nº','Filial','Setor','Localização','Responsável','Hostname','Usuário','Processador','Núcleos','Threads','Sistema','Build','RAM','Disco','Coleta','Arquivo de origem'];
 const STATUS_HEADER = 'Status patrimonial';
 const ASSET_HEADER = 'Patrimônio';
+const OPERATIONAL_STATUS_HEADER = 'Status operacional';
+const OPERATIONAL_STATUS_VALUES = ['Ativo', 'Em manutenção', 'Reserva', 'Backup', 'Desativado', 'Em substituição', 'Aguardando setor'];
 const STATUS_VALUES = ['Alugada', 'Patrimônio', 'Pessoal'];
 const STATUS_ALIASES = ['status patrimonial','status do ativo','tipo de patrimonio','tipo de patrimônio','tipo de ativo','situacao patrimonial','situação patrimonial','propriedade','posse','alugado','alugada','locado','locada'];
 function normalizeLabel(value) { return String(value ?? '').trim().toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
@@ -17,6 +19,7 @@ function findStatusHeader(headers) { return headers.find((h) => STATUS_ALIASES.i
 function normalizeSector(value) { const label = normalizeLabel(value); return ['alugado','alugada','aluguel'].includes(label) ? 'ALUGUEL' : String(value ?? '').trim(); }
 function extractAssetNumber(value) { const text = String(value ?? '').trim(); if(/^\d+$/.test(text)) return text; const match = text.match(/patrim(?:o|ô)nio\s*[:\/\-]?\s*(?:n[º°o]?|numero|número)?\s*[:#-]?\s*(\d+)/i) || text.match(/(?:aluguel|alugada|alugado).*?(\d+)\s*$/i); return match ? String(match[1]) : null; }
 function normalizeStatus(value, header = '') { const label = normalizeLabel(value); const headerLabel = normalizeLabel(header); if (label.includes('pessoal') || label.includes('usuario') || label.includes('usuário')) return 'Pessoal'; if ((headerLabel.includes('alug') || headerLabel.includes('locad')) && ['sim','yes','true','1'].includes(label)) return 'Alugada'; return label.includes('alug') || label.includes('locad') ? 'Alugada' : 'Patrimônio'; }
+function normalizeOperationalStatus(value) { const label = normalizeLabel(value); const aliases = { ativo: 'Ativo', 'em manutencao': 'Em manutenção', manutencao: 'Em manutenção', reserva: 'Reserva', backup: 'Backup', desativado: 'Desativado', 'em substituicao': 'Em substituição', 'aguardando setor': 'Aguardando setor', 'aguardando definicao de setor': 'Aguardando setor' }; return aliases[label] || 'Ativo'; }
 let pool;
 
 app.use(express.json({ limit: '15mb' }));
@@ -52,6 +55,7 @@ function validatePayload(payload) {
   const missing = REQUIRED_HEADERS.filter((h) => !headers.includes(h));
   if (missing.length) throw new Error(`Colunas obrigatórias ausentes: ${missing.join(', ')}`);
   const statusHeader = findStatusHeader(headers) || STATUS_HEADER;
+  const operationalHeader = headers.find((h) => normalizeLabel(h) === normalizeLabel(OPERATIONAL_STATUS_HEADER)) || OPERATIONAL_STATUS_HEADER;
   const assetHeader = headers.find((h) => normalizeLabel(h) === 'patrimonio' || normalizeLabel(h) === 'patrimônio' || normalizeLabel(h).includes('patrimonio'));
   const normalized = rows.map((row) => {
     const clean = {};
@@ -59,6 +63,7 @@ function validatePayload(payload) {
     clean['Setor'] = normalizeSector(clean['Setor']);
     clean[STATUS_HEADER] = normalizeStatus(row[statusHeader], statusHeader);
     clean[ASSET_HEADER] = extractAssetNumber(row[assetHeader] ?? row[statusHeader]);
+    clean[OPERATIONAL_STATUS_HEADER] = normalizeOperationalStatus(row[operationalHeader]);
     return clean;
   });
   return {
@@ -66,7 +71,7 @@ function validatePayload(payload) {
     SourceFile: String(payload.SourceFile || payload.sourceFile || 'importacao.xlsx'),
     ImportedAt: new Date().toISOString(),
     Count: normalized.length,
-    Headers: [...REQUIRED_HEADERS, STATUS_HEADER, ASSET_HEADER],
+    Headers: [...REQUIRED_HEADERS, STATUS_HEADER, ASSET_HEADER, OPERATIONAL_STATUS_HEADER],
     Rows: normalized
   };
 }
@@ -124,6 +129,14 @@ app.get('/api/inventory/latest', async (req, res) => {
   }
 });
 
+app.get('/api/inventory/history', async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT id, state_key, action, source_file, record_count, summary, created_at FROM inventory_history WHERE state_key = ? ORDER BY created_at DESC, id DESC LIMIT 100', ['current']);
+    res.setHeader('Cache-Control', 'no-store');
+    res.json(rows.map((row) => ({ ...row, summary: typeof row.summary === 'string' ? JSON.parse(row.summary) : row.summary })));
+  } catch (err) { res.status(500).json({ error: 'Falha ao consultar o histórico de importações.' }); }
+});
+
 function branchStateKey(value) { return `branch:${String(value || 'outra-filial').trim().toLowerCase().replace(/[^a-z0-9_-]+/g, '-').replace(/^-+|-+$/g, '').slice(0, 48) || 'outra-filial'}`; }
 
 app.get('/api/inventory/branch/latest', async (req, res) => {
@@ -151,6 +164,7 @@ app.post('/api/inventory/import', requireImportToken, async (req, res) => {
   try {
     const payload = validatePayload(req.body);
     await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(payload), 'current']);
+    await pool.query('INSERT INTO inventory_history (state_key, action, source_file, record_count, summary) VALUES (?, ?, ?, ?, ?)', ['current', 'import', payload.SourceFile, payload.Count, JSON.stringify(req.body.Summary || null)]);
     res.status(200).json({ ok: true, count: payload.Count, importedAt: payload.ImportedAt });
   } catch (err) {
     res.status(400).json({ error: err.message || 'Payload inválido.' });
@@ -159,20 +173,27 @@ app.post('/api/inventory/import', requireImportToken, async (req, res) => {
 
 app.put('/api/inventory/status', requireImportToken, async (req, res) => {
   try {
-    const requested = normalizeStatus(req.body?.Status || req.body?.status);
+    const kind = String(req.body?.Kind || req.body?.kind || 'asset').toLowerCase();
+    const isOperational = kind === 'operational';
+    const requested = isOperational ? normalizeOperationalStatus(req.body?.Status || req.body?.status) : normalizeStatus(req.body?.Status || req.body?.status);
+    const targetHeader = isOperational ? OPERATIONAL_STATUS_HEADER : STATUS_HEADER;
     const hostname = String(req.body?.Hostname || req.body?.hostname || '').trim();
     const number = String(req.body?.Numero ?? req.body?.numero ?? '').trim();
     if (!hostname && !number) return res.status(400).json({ error: 'Informe o Hostname ou o Nº da máquina.' });
     const [currentRows] = await pool.query('SELECT payload FROM inventory_state WHERE state_key = ?', ['current']);
     if (!currentRows.length) return res.status(404).json({ error: 'Nenhuma base de inventário disponível.' });
     const payload = typeof currentRows[0].payload === 'string' ? JSON.parse(currentRows[0].payload) : currentRows[0].payload;
-    payload.Headers = Array.isArray(payload.Headers) && payload.Headers.includes(STATUS_HEADER) ? payload.Headers : [...REQUIRED_HEADERS, STATUS_HEADER];
+    payload.Headers = Array.isArray(payload.Headers) ? payload.Headers : [...REQUIRED_HEADERS];
+    if (!payload.Headers.includes(STATUS_HEADER)) payload.Headers.push(STATUS_HEADER);
+    if (!payload.Headers.includes(ASSET_HEADER)) payload.Headers.push(ASSET_HEADER);
+    if (!payload.Headers.includes(OPERATIONAL_STATUS_HEADER)) payload.Headers.push(OPERATIONAL_STATUS_HEADER);
     const row = payload.Rows.find((item) => (number && String(item['Nº']) === number) || (hostname && String(item.Hostname || '').trim() === hostname));
     if (!row) return res.status(404).json({ error: 'Máquina não encontrada na base atual.' });
-    row[STATUS_HEADER] = requested;
+    row[targetHeader] = requested;
     payload.ImportedAt = new Date().toISOString();
     await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(payload), 'current']);
-    res.json({ ok: true, status: requested, hostname: row.Hostname, numero: row['Nº'] });
+    await pool.query('INSERT INTO inventory_history (state_key, action, source_file, record_count, summary) VALUES (?, ?, ?, ?, ?)', ['current', 'status_update', 'atualização manual', payload.Rows.length, JSON.stringify({ kind, status: requested, hostname: row.Hostname, numero: row['Nº'] })]);
+    res.json({ ok: true, status: requested, kind, hostname: row.Hostname, numero: row['Nº'] });
   } catch (err) {
     res.status(400).json({ error: err.message || 'Não foi possível atualizar o status.' });
   }

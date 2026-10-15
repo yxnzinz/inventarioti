@@ -13,3 +13,9 @@
 - Adicionar a subaba Visão executiva na sidebar, com indicadores gerenciais, gráficos por setor e status patrimonial, alertas automáticos, leitura de infraestrutura e modo apresentação, mantendo a página principal operacional.
 - Redefinir a identidade cromática de todo o site a partir do logotipo Intercargas: azul celeste `#2f77ad` para ações e nomes de setores, azul profundo para títulos/sidebar/textos institucionais, vermelho `#c53a3e` para alertas e acentos, fundos azulados claros e estados interativos com contraste legível.
 - Ao selecionar um XLSX, exibir uma prévia sem gravar dados, validando a aba `BASE COMPLETA` e mostrando linhas encontradas, colunas reconhecidas, registros novos, alterados e removidos, erros/avisos e patrimônios duplicados; a base compartilhada só deve ser atualizada após o usuário clicar em `Confirmar importação` e fornecer o token.
+- Disponibilizar histórico de importações e alterações manuais de status, com data, origem, quantidade e resumo.
+- Abrir ficha completa do equipamento ao clicar em uma máquina, preservando os dados individuais e permitindo revisar seus status.
+- Disponibilizar status operacional independente da classificação patrimonial: Ativo, Em manutenção, Reserva, Backup, Desativado, Em substituição e Aguardando setor.
+- Adicionar pesquisa rápida por nome, patrimônio, hostname, setor, sistema e demais campos da base.
+- Exibir uma página de permissões com os perfis Administrador, Tecnologia, Gestor e Consulta, mantendo mutações protegidas pelo token do servidor.
+- Disponibilizar relatório executivo do recorte atual com ação para gerar/salvar em PDF pelo navegador.
