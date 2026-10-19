@@ -65,6 +65,7 @@ function validatePayload(payload) {
     const clean = {};
     for (const h of REQUIRED_HEADERS) clean[h] = row[h] ?? null;
     clean['Setor'] = normalizeSector(clean['Setor']);
+    if (String(clean['Nº'] ?? '').trim() === '54') clean['Sistema'] = 'Windows Server';
     clean[STATUS_HEADER] = normalizeStatus(row[statusHeader], statusHeader);
     clean[ASSET_HEADER] = extractAssetNumber(row[assetHeader] ?? row[statusHeader]);
     clean[OPERATIONAL_STATUS_HEADER] = normalizeOperationalStatus(row[operationalHeader]);
