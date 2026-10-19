@@ -17,6 +17,9 @@ const STATUS_ALIASES = ['status patrimonial','status do ativo','tipo de patrimon
 function normalizeLabel(value) { return String(value ?? '').trim().toLocaleLowerCase('pt-BR').normalize('NFD').replace(/[\u0300-\u036f]/g, ''); }
 function findStatusHeader(headers) { return headers.find((h) => STATUS_ALIASES.includes(normalizeLabel(h)) || normalizeLabel(h).includes('alugad') || normalizeLabel(h).includes('locad')); }
 function normalizeSector(value) { const label = normalizeLabel(value); return ['alugado','alugada','aluguel'].includes(label) ? 'ALUGUEL' : String(value ?? '').trim(); }
+function isAuxiliaryMemoryRow(row) { const sector = normalizeLabel(row?.Setor); if (/^(?:\d+\s*(?:gb|gib)\s*(?:de\s*)?ram|ram\s*(?:de\s*)?\d+|memoria\s*(?:ram\s*)?\d+)/i.test(sector)) return true; const combined = normalizeLabel([row?.Setor, row?.Responsável, row?.Hostname, row?.Processador, row?.Sistema].join(' ')); const hasMemoryLabel = /\d+\s*(?:gb|gib)\s*(?:de\s*)?ram|ram\s*(?:de\s*)?\d+/i.test(combined); const hasEquipmentIdentity = [row?.Responsável, row?.Hostname, row?.Processador, row?.Sistema].some(value => String(value ?? '').trim() !== ''); return hasMemoryLabel && !hasEquipmentIdentity; }
+function removeAuxiliaryMemoryRows(rows) { return rows.filter(row => !isAuxiliaryMemoryRow(row)); }
+function sanitizeStoredPayload(payload) { if (!payload || !Array.isArray(payload.Rows)) return { payload, removed: 0 }; const rows = removeAuxiliaryMemoryRows(payload.Rows); const removed = payload.Rows.length - rows.length; if (removed) { payload.Rows = rows; payload.Count = rows.length; } return { payload, removed }; }
 function extractAssetNumber(value) { const text = String(value ?? '').trim(); if(/^\d+$/.test(text)) return text; const match = text.match(/patrim(?:o|ô)nio\s*[:\/\-]?\s*(?:n[º°o]?|numero|número)?\s*[:#-]?\s*(\d+)/i) || text.match(/(?:aluguel|alugada|alugado).*?(\d+)\s*$/i); return match ? String(match[1]) : null; }
 function normalizeStatus(value, header = '') { const label = normalizeLabel(value); const headerLabel = normalizeLabel(header); if (label.includes('pessoal') || label.includes('usuario') || label.includes('usuário')) return 'Pessoal'; if ((headerLabel.includes('alug') || headerLabel.includes('locad')) && ['sim','yes','true','1'].includes(label)) return 'Alugada'; return label.includes('alug') || label.includes('locad') ? 'Alugada' : 'Patrimônio'; }
 function normalizeOperationalStatus(value) { const label = normalizeLabel(value); const aliases = { ativo: 'Ativo', 'em manutencao': 'Em manutenção', manutencao: 'Em manutenção', reserva: 'Reserva', backup: 'Backup', desativado: 'Desativado', 'em substituicao': 'Em substituição', 'aguardando setor': 'Aguardando definição de setor', 'aguardando definicao de setor': 'Aguardando definição de setor' }; return aliases[label] || 'Ativo'; }
@@ -49,7 +52,8 @@ function validatePayload(payload) {
   if (!payload || !Array.isArray(payload.Rows) && !Array.isArray(payload.rows)) {
     throw new Error('Payload precisa conter um array Rows ou rows.');
   }
-  const rows = payload.Rows || payload.rows;
+  const sourceRows = payload.Rows || payload.rows;
+  const rows = removeAuxiliaryMemoryRows(sourceRows);
   if (!rows.length || rows.length > MAX_ROWS) throw new Error('Quantidade de registros fora do limite permitido.');
   const headers = Array.isArray(payload.Headers) ? payload.Headers : (Array.isArray(payload.headers) ? payload.headers : REQUIRED_HEADERS);
   const missing = REQUIRED_HEADERS.filter((h) => !headers.includes(h));
@@ -132,8 +136,10 @@ app.get('/api/inventory/latest', async (req, res) => {
     const [rows] = await pool.query('SELECT payload, updated_at FROM inventory_state WHERE state_key = ?', ['current']);
     if (!rows.length) return res.status(404).json({ error: 'Nenhuma base de inventário disponível.' });
     const payload = typeof rows[0].payload === 'string' ? JSON.parse(rows[0].payload) : rows[0].payload;
+    const cleaned = sanitizeStoredPayload(payload);
+    if (cleaned.removed) await pool.query('UPDATE inventory_state SET payload = ? WHERE state_key = ?', [JSON.stringify(cleaned.payload), 'current']);
     res.setHeader('Cache-Control', 'no-store');
-    res.json({ ...payload, UpdatedAt: rows[0].updated_at });
+    res.json({ ...cleaned.payload, UpdatedAt: rows[0].updated_at });
   } catch (err) {
     res.status(500).json({ error: 'Falha ao consultar a base de inventário.' });
   }
