@@ -18,3 +18,4 @@
 - Disponibilizar status operacional independente da classificação patrimonial: Ativo, Em manutenção, Reserva, Backup, Desativado, Em substituição e Aguardando setor.
 - Adicionar pesquisa rápida por nome, patrimônio, hostname, setor, sistema e demais campos da base.
 - Disponibilizar relatório executivo do recorte atual com ação para gerar/salvar em PDF pelo navegador.
+- Criar e manter uma aba isolada de infraestrutura para a planilha específica de Impressoras, Uso de impressoras, Wi-Fi e Switches, com contadores, filtro por categoria/pesquisa, tabela de ativos e importação própria sem misturar com computadores.
