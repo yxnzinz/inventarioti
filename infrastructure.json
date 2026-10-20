@@ -1,7 +1,7 @@
 {
   "Version": 1,
-  "SourceFile": "pasted_file_pCdrFp_INVENTARIO_TI_(IMPRESSORAS-WIFI-SWITCHS)_SAO_FITTIPALDI_INTERCARGAS.xlsx",
-  "ImportedAt": "2026-10-20T14:21:00-03:00",
+  "SourceFile": "infraestrutura-sem-uso-de-impressoras.xlsx",
+  "ImportedAt": "2026-10-20T14:57:30-03:00",
   "Assets": [
     {
       "ID": "IMP-001",
@@ -174,62 +174,6 @@
       "Fonte": "IMPRESSORAS"
     },
     {
-      "Equipamento": "Brother MFC8952DW",
-      "Páginas na troca": "N/A",
-      "Data da troca": null,
-      "Setor": "Operações",
-      "Endereço IP": "192.168.0.20",
-      "Endereço MAC": "30:05:5c:23:3e:e5",
-      "Nº de Série": "000G01234567890",
-      "Motivo": "N/A",
-      "Penúltima troca (páginas/data)": "N/A",
-      "Observações": null,
-      "Categoria": "Uso de impressoras",
-      "Fonte": "USO-IMPRESSORAS"
-    },
-    {
-      "Equipamento": "Brother DCP8152DN",
-      "Páginas na troca": 166394,
-      "Data da troca": "2026-09-22T00:00:00",
-      "Setor": "SAC",
-      "Endereço IP": "192.168.0.4",
-      "Endereço MAC": "30:05:5c:14:65:4c",
-      "Nº de Série": "000G01234567890",
-      "Motivo": "Erro Cilindro (Subst. Peças)",
-      "Penúltima troca (páginas/data)": "N/A",
-      "Observações": null,
-      "Categoria": "Uso de impressoras",
-      "Fonte": "USO-IMPRESSORAS"
-    },
-    {
-      "Equipamento": "Brother DCP8152DN",
-      "Páginas na troca": "N/A",
-      "Data da troca": null,
-      "Setor": "Financeiro",
-      "Endereço IP": "192.168.0.7",
-      "Endereço MAC": "30:05:5c:19:43:ce",
-      "Nº de Série": "U63263H3N502143",
-      "Motivo": "N/A",
-      "Penúltima troca (páginas/data)": "N/A",
-      "Observações": null,
-      "Categoria": "Uso de impressoras",
-      "Fonte": "USO-IMPRESSORAS"
-    },
-    {
-      "Equipamento": "Brother DCP8152DN",
-      "Páginas na troca": "N/A",
-      "Data da troca": null,
-      "Setor": "Planejamento",
-      "Endereço IP": "192.168.0.192",
-      "Endereço MAC": "00:1b:a9:e6:ea:94",
-      "Nº de Série": "000G01234567890",
-      "Motivo": "N/A",
-      "Penúltima troca (páginas/data)": "N/A",
-      "Observações": null,
-      "Categoria": "Uso de impressoras",
-      "Fonte": "USO-IMPRESSORAS"
-    },
-    {
       "Modelo": "Ubiqui",
       "Nome de Rede": "Intercargas",
       "Departamento": "Sac",
@@ -317,5 +261,6 @@
       "Categoria": "Switches",
       "Fonte": "SWITCH'S"
     }
-  ]
+  ],
+  "Count": 21
 }
