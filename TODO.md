@@ -19,3 +19,4 @@
 - Adicionar pesquisa rápida por nome, patrimônio, hostname, setor, sistema e demais campos da base.
 - Disponibilizar relatório executivo do recorte atual com ação para gerar/salvar em PDF pelo navegador.
 - Criar e manter uma aba isolada de infraestrutura para a planilha específica de Impressoras, Uso de impressoras, Wi-Fi e Switches, com contadores, filtro por categoria/pesquisa, tabela de ativos e importação própria sem misturar com computadores.
+- Implementar perfis de acesso com autorização no backend: Visualizador com consulta pública somente leitura; Operador com permissão para importar planilhas e atualizar status; Administrador com acesso ao histórico completo. A credencial deve ficar centralizada no painel de acesso e as rotas de escrita devem rejeitar usuários sem o perfil adequado.
