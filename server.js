@@ -40,31 +40,13 @@ function safeEqual(a, b) {
   return aa.length === bb.length && crypto.timingSafeEqual(aa, bb);
 }
 
-const ROLE_WEIGHT = { viewer: 0, operator: 1, admin: 2 };
-function suppliedAccessToken(req) {
-  return (req.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
-}
-function accessRole(req) {
-  const supplied = suppliedAccessToken(req);
-  const adminToken = process.env.INVENTORY_ADMIN_TOKEN;
-  const operatorToken = process.env.INVENTORY_OPERATOR_TOKEN || process.env.INVENTORY_IMPORT_TOKEN;
-  const adminEnabled = Boolean(adminToken && operatorToken && !safeEqual(adminToken, operatorToken));
-  if (adminEnabled && safeEqual(supplied, adminToken)) return 'admin';
-  if (operatorToken && safeEqual(supplied, operatorToken)) return 'operator';
-  return 'viewer';
-}
-function requireRole(minRole = 'operator') {
-  return (req, res, next) => {
-    const role = accessRole(req);
-    req.inventoryRole = role;
-    if (ROLE_WEIGHT[role] < ROLE_WEIGHT[minRole]) {
-      return res.status(403).json({ error: `Acesso restrito ao perfil ${minRole === 'admin' ? 'administrador' : 'operador'}.`, role });
-    }
-    next();
-  };
-}
 function requireImportToken(req, res, next) {
-  return requireRole('operator')(req, res, next);
+  const configured = process.env.INVENTORY_IMPORT_TOKEN;
+  const supplied = (req.get('authorization') || '').replace(/^Bearer\s+/i, '').trim();
+  if (!configured || !safeEqual(supplied, configured)) {
+    return res.status(401).json({ error: 'Token de importação inválido ou ausente.' });
+  }
+  next();
 }
 
 function validatePayload(payload) {
@@ -146,12 +128,6 @@ async function initDb() {
   }
 }
 
-app.get('/api/access/profile', (req, res) => {
-  const role = accessRole(req);
-  res.setHeader('Cache-Control', 'no-store');
-  res.json({ role, operatorEnabled: Boolean(process.env.INVENTORY_OPERATOR_TOKEN || process.env.INVENTORY_IMPORT_TOKEN), adminEnabled: Boolean(process.env.INVENTORY_ADMIN_TOKEN && (process.env.INVENTORY_OPERATOR_TOKEN || process.env.INVENTORY_IMPORT_TOKEN) && !safeEqual(process.env.INVENTORY_ADMIN_TOKEN, process.env.INVENTORY_OPERATOR_TOKEN || process.env.INVENTORY_IMPORT_TOKEN)) });
-});
-
 app.get('/_app/health', async (req, res) => {
   try {
     await pool.query('SELECT 1');
@@ -175,7 +151,7 @@ app.get('/api/inventory/latest', async (req, res) => {
   }
 });
 
-app.get('/api/inventory/history', requireRole('admin'), async (req, res) => {
+app.get('/api/inventory/history', async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT id, state_key, action, source_file, record_count, summary, created_at FROM inventory_history WHERE state_key = ? ORDER BY created_at DESC, id DESC LIMIT 100', ['current']);
     res.setHeader('Cache-Control', 'no-store');
