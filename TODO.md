@@ -19,3 +19,4 @@
 - Adicionar pesquisa rápida por nome, patrimônio, hostname, setor, sistema e demais campos da base.
 - Disponibilizar relatório executivo do recorte atual com ação para gerar/salvar em PDF pelo navegador.
 - Criar e manter uma aba isolada de infraestrutura para a planilha específica de Impressoras, Uso de impressoras, Wi-Fi e Switches, com contadores, filtro por categoria/pesquisa, tabela de ativos e importação própria sem misturar com computadores.
+- Na aba Infraestrutura de rede, exibir uma barra CSS segmentada e clicável para separar e filtrar as categorias Impressoras, Wi-Fi e Switches, mantendo os contadores sincronizados com a tabela.
