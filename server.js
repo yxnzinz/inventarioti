@@ -11,6 +11,7 @@ const REQUIRED_HEADERS = ['Nº','Filial','Setor','Localização','Responsável',
 const STATUS_HEADER = 'Status patrimonial';
 const ASSET_HEADER = 'Patrimônio';
 const OPERATIONAL_STATUS_HEADER = 'Status operacional';
+const ANYDESK_HEADER = 'AnyDesk';
 const OPERATIONAL_STATUS_VALUES = ['Ativo', 'Em manutenção', 'Reserva', 'Backup', 'Desativado', 'Em substituição', 'Aguardando definição de setor'];
 const STATUS_VALUES = ['Alugada', 'Patrimônio', 'Pessoal'];
 const STATUS_ALIASES = ['status patrimonial','status do ativo','tipo de patrimonio','tipo de patrimônio','tipo de ativo','situacao patrimonial','situação patrimonial','propriedade','posse','alugado','alugada','locado','locada'];
@@ -62,10 +63,12 @@ function validatePayload(payload) {
   const statusHeader = findStatusHeader(headers) || STATUS_HEADER;
   const operationalHeader = headers.find((h) => normalizeLabel(h) === normalizeLabel(OPERATIONAL_STATUS_HEADER)) || OPERATIONAL_STATUS_HEADER;
   const assetHeader = headers.find((h) => normalizeLabel(h) === 'patrimonio' || normalizeLabel(h) === 'patrimônio' || normalizeLabel(h).includes('patrimonio'));
+  const anyDeskHeader = headers.find((h) => ['anydesk', 'anydeskid', 'idanydesk'].includes(normalizeLabel(h).replace(/[ -]/g, '')));
   const normalized = rows.map((row) => {
     const clean = {};
     for (const h of REQUIRED_HEADERS) clean[h] = row[h] ?? null;
     clean['Setor'] = normalizeSector(clean['Setor']);
+    if (anyDeskHeader) clean[ANYDESK_HEADER] = row[anyDeskHeader] ?? row[ANYDESK_HEADER] ?? null;
     clean[STATUS_HEADER] = normalizeStatus(row[statusHeader], statusHeader);
     clean[ASSET_HEADER] = extractAssetNumber(row[assetHeader] ?? row[statusHeader]);
     clean[OPERATIONAL_STATUS_HEADER] = normalizeOperationalStatus(row[operationalHeader]);
@@ -76,7 +79,7 @@ function validatePayload(payload) {
     SourceFile: String(payload.SourceFile || payload.sourceFile || 'importacao.xlsx'),
     ImportedAt: new Date().toISOString(),
     Count: normalized.length,
-    Headers: [...REQUIRED_HEADERS, STATUS_HEADER, ASSET_HEADER, OPERATIONAL_STATUS_HEADER],
+    Headers: [...REQUIRED_HEADERS, ...(anyDeskHeader ? [ANYDESK_HEADER] : []), STATUS_HEADER, ASSET_HEADER, OPERATIONAL_STATUS_HEADER],
     Rows: normalized
   };
 }
