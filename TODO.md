@@ -20,7 +20,9 @@
 - Disponibilizar relatório executivo do recorte atual com ação para gerar/salvar em PDF pelo navegador.
 - Criar e manter uma aba isolada de infraestrutura para a planilha específica de Impressoras, Uso de impressoras, Wi-Fi e Switches, com contadores, filtro por categoria/pesquisa, tabela de ativos e importação própria sem misturar com computadores.
 - Na aba Infraestrutura de rede, exibir uma barra CSS segmentada e clicável para separar e filtrar as categorias Impressoras, Wi-Fi e Switches, mantendo os contadores sincronizados com a tabela.
-- Implementar login por Manus OAuth usando `webdev_app_session`, com estado/nonce de uso único, sessão segura e validação da identidade no backend.
-- Vincular `admin@inter.com.br` ao perfil Administrador, permitindo importações, alterações de status/classificação, atualização de infraestrutura e outra filial, além de consulta, rastreabilidade, relatórios e exportações.
-- Vincular `yan@inter.com.br` ao perfil Cliente visualizador, permitindo consulta, filtros, fichas, relatórios e exportações, mas ocultando e bloqueando importações e alterações.
-- Recusar e-mails não cadastrados e aplicar as permissões também nas rotas de API, sem depender somente de controles visuais no navegador.
+- Implementar login interno com e-mail/identificador e senha própria, usando `webdev_app_session`, derivação segura de senha com `scrypt`, sessões persistentes no banco e cookie `HttpOnly`, `Secure` e `SameSite=None` no domínio HTTPS.
+- No primeiro acesso sem usuários, permitir cadastrar o primeiro usuário como Administrador; depois, bloquear o cadastro público e exigir sessão de Administrador para criar usuários.
+- Criar a subaba Gerenciador de usuários, visível somente para Administradores, com inclusão, edição de nome/e-mail interno, troca de senha, seleção de perfil Administrador ou Visualizador, ativação/desativação e exclusão.
+- Permitir e-mails internos fictícios ou inexistentes fora da empresa, usando-os somente como identificadores do login local.
+- Garantir que Administradores possam importar computadores, infraestrutura e outra filial, alterar status/classificação e gerenciar usuários; Visualizadores possam consultar, filtrar, abrir fichas, gerar relatórios e exportar, sem mutações.
+- Aplicar a autorização também nas rotas da API, sem depender somente de controles visuais no navegador; endpoints de consulta exigem sessão e endpoints de mutação/usuários exigem Administrador, mantendo o token de importação.

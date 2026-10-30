@@ -8,12 +8,8 @@ const app = express();
 const PORT = Number(process.env.PORT || 3000);
 const MAX_ROWS = 50000;
 const SESSION_COOKIE = 'webdev_app_session';
-const OAUTH_STATE_COOKIE = 'inventario_oauth_state';
 const SESSION_TTL_SECONDS = 7 * 24 * 60 * 60;
-const AUTH_USERS = Object.freeze({
-  'admin@inter.com.br': { role: 'admin', label: 'Administrador' },
-  'yan@inter.com.br': { role: 'viewer', label: 'Cliente visualizador' }
-});
+const USER_ROLES = Object.freeze({ admin: 'Administrador', viewer: 'Visualizador' });
 const REQUIRED_HEADERS = ['Nº','Filial','Setor','Localização','Responsável','Hostname','Usuário','Processador','Núcleos','Threads','Sistema','Build','RAM','Disco','Coleta','Arquivo de origem'];
 const STATUS_HEADER = 'Status patrimonial';
 const ASSET_HEADER = 'Patrimônio';
@@ -58,6 +54,7 @@ function requireImportToken(req, res, next) {
 }
 
 function normalizeEmail(value) { return String(value || '').trim().toLowerCase(); }
+function validEmail(value) { return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(normalizeEmail(value)); }
 function parseCookies(header) {
   return String(header || '').split(';').reduce((out, part) => {
     const index = part.indexOf('=');
@@ -75,52 +72,50 @@ function serializeCookie(name, value, req, maxAge) {
   const secure = cookieSecure(req);
   return `${name}=${encodeURIComponent(value)}; Path=/; HttpOnly; SameSite=${secure ? 'None' : 'Lax'}; Max-Age=${maxAge}${secure ? '; Secure' : ''}`;
 }
-function publicOrigin(req) {
-  const configured = String(process.env.PUBLIC_ORIGIN || '').trim().replace(/\/$/, '');
-  if (configured) return configured;
-  const forwardedProto = String(req.get('x-forwarded-proto') || '').split(',')[0].trim();
-  const host = String(req.get('x-forwarded-host') || '').split(',')[0].trim() || req.get('host');
-  const localHost = host.startsWith('localhost') || host.startsWith('127.') || host.startsWith('0.0.0.0');
-  const proto = forwardedProto || (localHost ? 'http' : 'https');
-  return `${proto}://${host}`;
+function hashPassword(password) {
+  const salt = crypto.randomBytes(16).toString('hex');
+  const hash = crypto.scryptSync(String(password), salt, 64).toString('hex');
+  return `scrypt$${salt}$${hash}`;
 }
-function identityFromObject(identity) {
-  const source = identity || {};
-  const email = normalizeEmail(source.email || source.mail || source.preferred_username || source.user?.email || source.profile?.email);
-  const mapped = AUTH_USERS[email];
-  if (!mapped) return null;
-  return { email, openId: String(source.openId || source.open_id || source.sub || ''), name: String(source.name || source.displayName || source.user?.name || email), role: mapped.role, roleLabel: mapped.label };
-}
-function verifyPlatformJwt(token) {
-  const secret = process.env.MANUS_JWT_SECRET;
-  if (!secret) return null;
-  const parts = String(token || '').split('.');
-  if (parts.length !== 3) return null;
+function verifyPassword(password, encoded) {
+  const [algorithm, salt, expectedHex] = String(encoded || '').split('$');
+  if (algorithm !== 'scrypt' || !salt || !expectedHex) return false;
   try {
-    const [encodedHeader, encodedPayload, signature] = parts;
-    const header = JSON.parse(Buffer.from(encodedHeader, 'base64url').toString('utf8'));
-    const payload = JSON.parse(Buffer.from(encodedPayload, 'base64url').toString('utf8'));
-    if (header.alg !== 'HS256') return null;
-    const expected = crypto.createHmac('sha256', secret).update(`${encodedHeader}.${encodedPayload}`).digest('base64url');
-    if (!safeEqual(signature, expected)) return null;
-    if (payload.exp && Number(payload.exp) * 1000 <= Date.now()) return null;
-    if (process.env.MANUS_PROJECT_ID && payload.appId && String(payload.appId) !== String(process.env.MANUS_PROJECT_ID)) return null;
-    return payload;
-  } catch (_) { return null; }
+    const actual = crypto.scryptSync(String(password), salt, 64);
+    const expected = Buffer.from(expectedHex, 'hex');
+    return expected.length === actual.length && crypto.timingSafeEqual(actual, expected);
+  } catch (_) { return false; }
+}
+function publicUser(row) {
+  return { id: Number(row.id), name: String(row.name || ''), email: normalizeEmail(row.email), role: String(row.role), roleLabel: USER_ROLES[row.role] || row.role, active: Boolean(row.active), createdAt: row.created_at, updatedAt: row.updated_at };
+}
+function validateUserFields(body, { passwordRequired = true } = {}) {
+  const name = String(body?.name || '').trim().slice(0, 120);
+  const email = normalizeEmail(body?.email);
+  const role = body?.role === 'admin' ? 'admin' : body?.role === 'viewer' ? 'viewer' : '';
+  const password = String(body?.password || '');
+  if (name.length < 2) throw new Error('Informe o nome do usuário.');
+  if (!validEmail(email)) throw new Error('Informe um e-mail ou identificador interno válido.');
+  if (!role) throw new Error('Selecione Administrador ou Visualizador.');
+  if (passwordRequired && password.length < 8) throw new Error('A senha deve ter pelo menos 8 caracteres.');
+  if (!passwordRequired && password && password.length < 8) throw new Error('A nova senha deve ter pelo menos 8 caracteres.');
+  return { name, email, role, password };
 }
 async function resolveAuthUser(req) {
   const token = parseCookies(req.headers.cookie)[SESSION_COOKIE];
-  if (!token) return null;
-  const platformIdentity = verifyPlatformJwt(token);
-  if (platformIdentity) return identityFromObject(platformIdentity);
-  if (!pool) return null;
+  if (!token || !pool) return null;
   const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
-  const [rows] = await pool.query('SELECT email, open_id, display_name, role FROM auth_sessions WHERE token_hash = ? AND expires_at > CURRENT_TIMESTAMP LIMIT 1', [tokenHash]);
-  if (!rows.length) return null;
-  const row = rows[0];
-  const mapped = AUTH_USERS[normalizeEmail(row.email)];
-  if (!mapped || mapped.role !== row.role) return null;
-  return { email: normalizeEmail(row.email), openId: String(row.open_id || ''), name: String(row.display_name || row.email), role: row.role, roleLabel: mapped.label };
+  const [rows] = await pool.query(`SELECT u.id, u.name, u.email, u.role, u.active, u.created_at, u.updated_at
+    FROM app_sessions s JOIN app_users u ON u.id = s.user_id
+    WHERE s.token_hash = ? AND s.expires_at > CURRENT_TIMESTAMP AND u.active = 1 LIMIT 1`, [tokenHash]);
+  return rows.length ? publicUser(rows[0]) : null;
+}
+async function createSession(userId, req, res) {
+  const token = crypto.randomBytes(32).toString('base64url');
+  const tokenHash = crypto.createHash('sha256').update(token).digest('hex');
+  await pool.query('DELETE FROM app_sessions WHERE expires_at <= CURRENT_TIMESTAMP');
+  await pool.query('INSERT INTO app_sessions (token_hash, user_id, expires_at) VALUES (?, ?, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 7 DAY))', [tokenHash, userId]);
+  res.setHeader('Set-Cookie', serializeCookie(SESSION_COOKIE, token, req, SESSION_TTL_SECONDS));
 }
 async function requireAuth(req, res, next) {
   try {
@@ -134,58 +129,88 @@ function requireAdmin(req, res, next) {
   if (req.authUser?.role !== 'admin') return res.status(403).json({ error: 'Acesso exclusivo para administradores.', code: 'ADMIN_REQUIRED' });
   next();
 }
-async function exchangeManusCode(code, redirectUri) {
-  const base = String(process.env.MANUS_OAUTH_API_URL || '').replace(/\/$/, '');
-  if (!base || !process.env.MANUS_PROJECT_ID) throw new Error('OAuth do Manus não está configurado no ambiente.');
-  const response = await fetch(`${base}/webdev.v1.WebDevAuthPublicService/ExchangeToken`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ clientId: process.env.MANUS_PROJECT_ID, grantType: 'authorization_code', code, redirectUri }) });
-  const data = await response.json().catch(() => ({}));
-  if (!response.ok || !data.accessToken) throw new Error('Não foi possível concluir o login.');
-  const identityResponse = await fetch(`${base}/webdev.v1.WebDevAuthPublicService/GetUserInfo`, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ accessToken: data.accessToken }) });
-  const identity = await identityResponse.json().catch(() => ({}));
-  if (!identityResponse.ok) throw new Error('Não foi possível identificar a conta Manus.');
-  return identity;
-}
+app.get('/api/auth/setup-status', async (req, res) => {
+  try { const [rows] = await pool.query('SELECT COUNT(*) AS total FROM app_users'); res.json({ setupRequired: Number(rows[0].total) === 0 }); }
+  catch (_) { res.status(500).json({ error: 'Não foi possível consultar a configuração inicial.' }); }
+});
+app.post('/api/auth/setup', async (req, res) => {
+  try {
+    const fields = validateUserFields({ ...req.body, role: 'admin' });
+    const [existing] = await pool.query('SELECT COUNT(*) AS total FROM app_users');
+    if (Number(existing[0].total) > 0) return res.status(409).json({ error: 'O administrador inicial já foi criado.' });
+    const [result] = await pool.query('INSERT INTO app_users (name, email, password_hash, role, active) VALUES (?, ?, ?, ?, 1)', [fields.name, fields.email, hashPassword(fields.password), 'admin']);
+    const [rows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users WHERE id = ?', [result.insertId]);
+    await createSession(result.insertId, req, res);
+    res.status(201).json({ ok: true, user: publicUser(rows[0]) });
+  } catch (err) { res.status(400).json({ error: err.code === 'ER_DUP_ENTRY' ? 'Este identificador já está cadastrado.' : (err.message || 'Não foi possível criar o administrador.') }); }
+});
 app.get('/api/auth/me', async (req, res) => {
-  try {
-    const user = await resolveAuthUser(req);
-    res.setHeader('Cache-Control', 'no-store');
-    if (!user) return res.status(401).json({ authenticated: false });
-    res.json({ authenticated: true, user: { email: user.email, name: user.name, role: user.role, roleLabel: user.roleLabel } });
-  } catch (_) { res.status(500).json({ authenticated: false, error: 'Falha ao consultar a sessão.' }); }
+  try { const user = await resolveAuthUser(req); res.setHeader('Cache-Control', 'no-store'); if (!user) return res.status(401).json({ authenticated: false }); res.json({ authenticated: true, user }); }
+  catch (_) { res.status(500).json({ authenticated: false, error: 'Falha ao consultar a sessão.' }); }
 });
-app.get('/api/auth/login', (req, res) => {
-  const portal = String(process.env.MANUS_OAUTH_PORTAL_URL || '').replace(/\/$/, '');
-  if (!portal || !process.env.MANUS_PROJECT_ID) return res.status(503).send('Login Manus indisponível: OAuth não configurado.');
-  const nonce = crypto.randomBytes(24).toString('base64url');
-  const redirectUri = `${publicOrigin(req)}/api/auth/callback`;
-  const state = Buffer.from(JSON.stringify({ nonce, redirectUri })).toString('base64url');
-  res.setHeader('Set-Cookie', serializeCookie(OAUTH_STATE_COOKIE, nonce, req, 600));
-  const target = `${portal}/app-auth?${new URLSearchParams({ appId: process.env.MANUS_PROJECT_ID, redirectUri, state, responseType: 'code' }).toString()}`;
-  res.redirect(target);
-});
-app.get('/api/auth/callback', async (req, res) => {
+app.post('/api/auth/login', async (req, res) => {
   try {
-    const cookies = parseCookies(req.headers.cookie);
-    const parsed = JSON.parse(Buffer.from(String(req.query.state || ''), 'base64url').toString('utf8'));
-    const redirectUri = `${publicOrigin(req)}/api/auth/callback`;
-    if (!parsed.nonce || !cookies[OAUTH_STATE_COOKIE] || !safeEqual(parsed.nonce, cookies[OAUTH_STATE_COOKIE]) || parsed.redirectUri !== redirectUri) return res.status(400).send('Sessão de login inválida ou expirada.');
-    const identity = identityFromObject(await exchangeManusCode(String(req.query.code || ''), redirectUri));
-    if (!identity) return res.redirect('/?auth=denied');
-    const sessionToken = crypto.randomBytes(32).toString('base64url');
-    const tokenHash = crypto.createHash('sha256').update(sessionToken).digest('hex');
-    await pool.query('DELETE FROM auth_sessions WHERE expires_at <= CURRENT_TIMESTAMP');
-    await pool.query('INSERT INTO auth_sessions (token_hash, email, open_id, display_name, role, expires_at) VALUES (?, ?, ?, ?, ?, DATE_ADD(CURRENT_TIMESTAMP, INTERVAL 7 DAY))', [tokenHash, identity.email, identity.openId, identity.name, identity.role]);
-    res.setHeader('Set-Cookie', [serializeCookie(SESSION_COOKIE, sessionToken, req, SESSION_TTL_SECONDS), serializeCookie(OAUTH_STATE_COOKIE, '', req, 0)]);
-    res.redirect('/');
-  } catch (err) { console.error('Falha no callback OAuth:', err.message); res.status(400).send('Não foi possível concluir o login. Tente novamente.'); }
+    const email = normalizeEmail(req.body?.email);
+    const password = String(req.body?.password || '');
+    if (!validEmail(email) || !password) return res.status(401).json({ error: 'Informe o identificador e a senha.' });
+    const [rows] = await pool.query('SELECT id, name, email, password_hash, role, active, created_at, updated_at FROM app_users WHERE email = ? LIMIT 1', [email]);
+    if (!rows.length || !rows[0].active || !verifyPassword(password, rows[0].password_hash)) return res.status(401).json({ error: 'Identificador ou senha inválidos.' });
+    await createSession(rows[0].id, req, res);
+    res.json({ ok: true, user: publicUser(rows[0]) });
+  } catch (_) { res.status(500).json({ error: 'Não foi possível realizar o login.' }); }
 });
 app.post('/api/auth/logout', async (req, res) => {
-  try {
-    const token = parseCookies(req.headers.cookie)[SESSION_COOKIE];
-    if (token && pool) await pool.query('DELETE FROM auth_sessions WHERE token_hash = ?', [crypto.createHash('sha256').update(token).digest('hex')]);
-  } catch (_) {}
+  try { const token = parseCookies(req.headers.cookie)[SESSION_COOKIE]; if (token && pool) await pool.query('DELETE FROM app_sessions WHERE token_hash = ?', [crypto.createHash('sha256').update(token).digest('hex')]); }
+  catch (_) {}
   res.setHeader('Set-Cookie', serializeCookie(SESSION_COOKIE, '', req, 0));
   res.json({ ok: true });
+});
+app.use('/api/users', requireAuth, requireAdmin);
+app.get('/api/users', async (req, res) => {
+  try { const [rows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users ORDER BY active DESC, name ASC'); res.json({ users: rows.map(publicUser) }); }
+  catch (_) { res.status(500).json({ error: 'Não foi possível listar os usuários.' }); }
+});
+app.post('/api/users', async (req, res) => {
+  try {
+    const fields = validateUserFields(req.body);
+    const [result] = await pool.query('INSERT INTO app_users (name, email, password_hash, role, active) VALUES (?, ?, ?, ?, ?)', [fields.name, fields.email, hashPassword(fields.password), fields.role, req.body.active === false ? 0 : 1]);
+    const [rows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users WHERE id = ?', [result.insertId]);
+    res.status(201).json({ ok: true, user: publicUser(rows[0]) });
+  } catch (err) { res.status(400).json({ error: err.code === 'ER_DUP_ENTRY' ? 'Este identificador já está cadastrado.' : (err.message || 'Não foi possível criar o usuário.') }); }
+});
+app.put('/api/users/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    const [found] = await pool.query('SELECT id, name, email, password_hash, role, active FROM app_users WHERE id = ?', [id]);
+    if (!found.length) return res.status(404).json({ error: 'Usuário não encontrado.' });
+    const current = found[0];
+    const fields = validateUserFields({ name: req.body.name ?? current.name, email: req.body.email ?? current.email, role: req.body.role ?? current.role, password: req.body.password || '' }, { passwordRequired: false });
+    const active = req.body.active === undefined ? Boolean(current.active) : Boolean(req.body.active);
+    if (id === req.authUser.id && (!active || fields.role !== 'admin')) return res.status(400).json({ error: 'Você não pode desativar ou retirar o perfil do próprio usuário.' });
+    if (current.role === 'admin' && current.active && (!active || fields.role !== 'admin')) {
+      const [admins] = await pool.query("SELECT COUNT(*) AS total FROM app_users WHERE role = 'admin' AND active = 1 AND id <> ?", [id]);
+      if (Number(admins[0].total) === 0) return res.status(400).json({ error: 'É necessário manter pelo menos um Administrador ativo.' });
+    }
+    const passwordHash = fields.password ? hashPassword(fields.password) : current.password_hash;
+    await pool.query('UPDATE app_users SET name = ?, email = ?, password_hash = ?, role = ?, active = ? WHERE id = ?', [fields.name, fields.email, passwordHash, fields.role, active ? 1 : 0, id]);
+    const [rows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users WHERE id = ?', [id]);
+    res.json({ ok: true, user: publicUser(rows[0]) });
+  } catch (err) { res.status(400).json({ error: err.code === 'ER_DUP_ENTRY' ? 'Este identificador já está cadastrado.' : (err.message || 'Não foi possível atualizar o usuário.') }); }
+});
+app.delete('/api/users/:id', async (req, res) => {
+  try {
+    const id = Number(req.params.id);
+    if (id === req.authUser.id) return res.status(400).json({ error: 'Não é possível excluir o próprio usuário.' });
+    const [found] = await pool.query('SELECT id, role, active FROM app_users WHERE id = ?', [id]);
+    if (!found.length) return res.status(404).json({ error: 'Usuário não encontrado.' });
+    if (found[0].role === 'admin' && found[0].active) {
+      const [admins] = await pool.query("SELECT COUNT(*) AS total FROM app_users WHERE role = 'admin' AND active = 1 AND id <> ?", [id]);
+      if (Number(admins[0].total) === 0) return res.status(400).json({ error: 'É necessário manter pelo menos um Administrador ativo.' });
+    }
+    await pool.query('DELETE FROM app_sessions WHERE user_id = ?', [id]);
+    await pool.query('DELETE FROM app_users WHERE id = ?', [id]);
+    res.json({ ok: true });
+  } catch (_) { res.status(500).json({ error: 'Não foi possível excluir o usuário.' }); }
 });
 function validatePayload(payload) {
   if (!payload || !Array.isArray(payload.Rows) && !Array.isArray(payload.rows)) {
@@ -239,16 +264,26 @@ async function initDb() {
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_inventory_history_state_date (state_key, created_at)
   )`);
-  await pool.query(`CREATE TABLE IF NOT EXISTS auth_sessions (
+  await pool.query(`CREATE TABLE IF NOT EXISTS app_users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(120) NOT NULL,
+    email VARCHAR(255) NOT NULL UNIQUE,
+    password_hash VARCHAR(255) NOT NULL,
+    role VARCHAR(16) NOT NULL DEFAULT 'viewer',
+    active TINYINT(1) NOT NULL DEFAULT 1,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    INDEX idx_app_users_active (active),
+    INDEX idx_app_users_role (role)
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS app_sessions (
     token_hash CHAR(64) PRIMARY KEY,
-    email VARCHAR(255) NOT NULL,
-    open_id VARCHAR(255),
-    display_name VARCHAR(255),
-    role VARCHAR(32) NOT NULL,
+    user_id INT NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     expires_at TIMESTAMP NOT NULL,
-    INDEX idx_auth_sessions_expiry (expires_at),
-    INDEX idx_auth_sessions_email (email)
+    INDEX idx_app_sessions_expiry (expires_at),
+    INDEX idx_app_sessions_user (user_id),
+    CONSTRAINT fk_app_sessions_user FOREIGN KEY (user_id) REFERENCES app_users(id) ON DELETE CASCADE
   )`);
   await pool.query(`CREATE TABLE IF NOT EXISTS infrastructure_state (state_key VARCHAR(64) PRIMARY KEY, payload JSON NOT NULL, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)`);
   const [infraRows] = await pool.query('SELECT state_key FROM infrastructure_state WHERE state_key = ?', ['current']);

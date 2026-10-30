@@ -27,11 +27,12 @@ A seleção do arquivo não grava dados. O navegador valida a aba `BASE COMPLETA
 ## Camada operacional complementar
 O painel passa a oferecer pesquisa rápida por campos do equipamento, ficha detalhada em modal, status operacional independente da classificação patrimonial, histórico persistente de importações e alterações de status, relatório executivo imprimível/salvável em PDF respeitando os filtros ativos.
 
-## Acesso por perfil
-O acesso será feito pelo **Manus OAuth**, sem senhas locais ou credenciais armazenadas no projeto. O backend resolverá a identidade autenticada pelo e-mail e criará uma sessão própria com o cookie `webdev_app_session`, compatível com o Preview incorporado e marcado como `HttpOnly`, `Secure` e `SameSite=None`.
+## Acesso por perfil e gerenciador interno de usuários
+O acesso será feito por **login interno**, sem depender de contas reais no Manus ou na internet. O backend armazenará usuários, senhas derivadas com `scrypt` e sessões opacas no banco gerenciado. O cookie `webdev_app_session` será `HttpOnly`, `Secure` e `SameSite=None` no domínio HTTPS publicado, mantendo tratamento local separado para desenvolvimento.
 
-- `admin@inter.com.br`: perfil `admin`, com importação de computadores, infraestrutura e outra filial; alterações de status/classificação; rastreabilidade; filtros, fichas, relatórios e exportações.
-- `yan@inter.com.br`: perfil `viewer`, com consulta, filtros, fichas, relatórios e exportações, sem controles de importação ou alteração.
-- E-mails não cadastrados serão recusados com mensagem de acesso não autorizado.
-- A autorização será aplicada no backend, não apenas na interface: consultas exigem usuário autenticado; mutações exigem perfil administrador e continuam protegidas pelo token de importação.
-- O login terá estado visível no cabeçalho, botão de entrada/saída e tela de acesso bloqueado enquanto a identidade não for resolvida.
+- No primeiro acesso, o sistema permitirá criar o primeiro usuário Administrador; depois disso, somente Administradores poderão criar novos usuários.
+- O Gerenciador de usuários será uma subaba da sidebar, visível apenas para Administradores, com cadastro, edição de nome/e-mail interno, perfil, senha, ativação/desativação e exclusão.
+- Os perfis serão `Administrador` e `Visualizador`. Administradores poderão importar computadores, infraestrutura e outra filial, alterar status/classificação e gerenciar usuários; Visualizadores poderão consultar, filtrar, abrir fichas, gerar relatórios e exportar dados, sem mutações.
+- E-mails internos podem ser fictícios ou não existir fora da empresa; eles funcionarão como identificadores de login no próprio sistema.
+- A autorização será aplicada também no backend: consultas exigem sessão; mutações e endpoints de usuários exigem perfil Administrador; importações continuam protegidas pelo token de importação.
+- O login terá estado visível no cabeçalho, botão de saída, mensagens de erro e tela de acesso bloqueado enquanto não houver sessão válida.
