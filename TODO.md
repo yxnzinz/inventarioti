@@ -20,3 +20,7 @@
 - Disponibilizar relatório executivo do recorte atual com ação para gerar/salvar em PDF pelo navegador.
 - Criar e manter uma aba isolada de infraestrutura para a planilha específica de Impressoras, Uso de impressoras, Wi-Fi e Switches, com contadores, filtro por categoria/pesquisa, tabela de ativos e importação própria sem misturar com computadores.
 - Na aba Infraestrutura de rede, exibir uma barra CSS segmentada e clicável para separar e filtrar as categorias Impressoras, Wi-Fi e Switches, mantendo os contadores sincronizados com a tabela.
+- Implementar login por Manus OAuth usando `webdev_app_session`, com estado/nonce de uso único, sessão segura e validação da identidade no backend.
+- Vincular `admin@inter.com.br` ao perfil Administrador, permitindo importações, alterações de status/classificação, atualização de infraestrutura e outra filial, além de consulta, rastreabilidade, relatórios e exportações.
+- Vincular `yan@inter.com.br` ao perfil Cliente visualizador, permitindo consulta, filtros, fichas, relatórios e exportações, mas ocultando e bloqueando importações e alterações.
+- Recusar e-mails não cadastrados e aplicar as permissões também nas rotas de API, sem depender somente de controles visuais no navegador.

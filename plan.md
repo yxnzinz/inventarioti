@@ -26,3 +26,12 @@ A seleção do arquivo não grava dados. O navegador valida a aba `BASE COMPLETA
 
 ## Camada operacional complementar
 O painel passa a oferecer pesquisa rápida por campos do equipamento, ficha detalhada em modal, status operacional independente da classificação patrimonial, histórico persistente de importações e alterações de status, relatório executivo imprimível/salvável em PDF respeitando os filtros ativos.
+
+## Acesso por perfil
+O acesso será feito pelo **Manus OAuth**, sem senhas locais ou credenciais armazenadas no projeto. O backend resolverá a identidade autenticada pelo e-mail e criará uma sessão própria com o cookie `webdev_app_session`, compatível com o Preview incorporado e marcado como `HttpOnly`, `Secure` e `SameSite=None`.
+
+- `admin@inter.com.br`: perfil `admin`, com importação de computadores, infraestrutura e outra filial; alterações de status/classificação; rastreabilidade; filtros, fichas, relatórios e exportações.
+- `yan@inter.com.br`: perfil `viewer`, com consulta, filtros, fichas, relatórios e exportações, sem controles de importação ou alteração.
+- E-mails não cadastrados serão recusados com mensagem de acesso não autorizado.
+- A autorização será aplicada no backend, não apenas na interface: consultas exigem usuário autenticado; mutações exigem perfil administrador e continuam protegidas pelo token de importação.
+- O login terá estado visível no cabeçalho, botão de entrada/saída e tela de acesso bloqueado enquanto a identidade não for resolvida.
