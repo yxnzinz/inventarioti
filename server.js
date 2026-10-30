@@ -338,7 +338,7 @@ app.get('/api/inventory/latest', async (req, res) => {
   }
 });
 
-app.get('/api/inventory/history', async (req, res) => {
+app.get('/api/inventory/history', requireAdmin, async (req, res) => {
   try {
     const [rows] = await pool.query('SELECT id, state_key, action, source_file, record_count, summary, created_at FROM inventory_history WHERE state_key = ? ORDER BY created_at DESC, id DESC LIMIT 100', ['current']);
     res.setHeader('Cache-Control', 'no-store');
