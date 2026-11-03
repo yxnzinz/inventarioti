@@ -166,6 +166,34 @@ app.post('/api/auth/logout', async (req, res) => {
   res.json({ ok: true });
 });
 app.use('/api/users', requireAuth, requireAdmin);
+app.get('/api/admin/backup', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const [inventoryRows] = await pool.query('SELECT state_key, payload, updated_at FROM inventory_state ORDER BY state_key');
+    const [infrastructureRows] = await pool.query('SELECT state_key, payload, updated_at FROM infrastructure_state ORDER BY state_key');
+    const [userRows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users ORDER BY id');
+    const parsePayload = (row) => ({
+      stateKey: row.state_key,
+      updatedAt: row.updated_at,
+      payload: typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload
+    });
+    const backup = {
+      backupVersion: 1,
+      generatedAt: new Date().toISOString(),
+      generatedBy: { id: req.authUser.id, name: req.authUser.name, email: req.authUser.email, role: req.authUser.role },
+      inventory: inventoryRows.filter((row) => row.state_key === 'current').map(parsePayload),
+      branches: inventoryRows.filter((row) => row.state_key !== 'current').map(parsePayload),
+      infrastructure: infrastructureRows.map(parsePayload),
+      users: userRows.map((user) => ({ ...user, active: Boolean(user.active) }))
+    };
+    const filename = `backup-inventario-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
+    res.setHeader('Cache-Control', 'no-store');
+    res.setHeader('Content-Type', 'application/json; charset=utf-8');
+    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
+    res.json(backup);
+  } catch (_) {
+    res.status(500).json({ error: 'Não foi possível gerar o backup manual.' });
+  }
+});
 app.get('/api/users', async (req, res) => {
   try { const [rows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users ORDER BY active DESC, name ASC'); res.json({ users: rows.map(publicUser) }); }
   catch (_) { res.status(500).json({ error: 'Não foi possível listar os usuários.' }); }
