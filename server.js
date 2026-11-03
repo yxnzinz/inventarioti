@@ -166,30 +166,52 @@ app.post('/api/auth/logout', async (req, res) => {
   res.json({ ok: true });
 });
 app.use('/api/users', requireAuth, requireAdmin);
+async function buildBackupPayload(generatedBy, trigger) {
+  const [inventoryRows] = await pool.query('SELECT state_key, payload, updated_at FROM inventory_state ORDER BY state_key');
+  const [infrastructureRows] = await pool.query('SELECT state_key, payload, updated_at FROM infrastructure_state ORDER BY state_key');
+  const [userRows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users ORDER BY id');
+  const parsePayload = (row) => ({
+    stateKey: row.state_key,
+    updatedAt: row.updated_at,
+    payload: typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload
+  });
+  return {
+    backupVersion: 1,
+    generatedAt: new Date().toISOString(),
+    trigger,
+    generatedBy,
+    inventory: inventoryRows.filter((row) => row.state_key === 'current').map(parsePayload),
+    branches: inventoryRows.filter((row) => row.state_key !== 'current').map(parsePayload),
+    infrastructure: infrastructureRows.map(parsePayload),
+    users: userRows.map((user) => ({ ...user, active: Boolean(user.active) }))
+  };
+}
+async function runAutomaticBackup() {
+  let locked = false;
+  try {
+    const [lockRows] = await pool.query("SELECT GET_LOCK('inventarioti:daily-backup', 0) AS acquired");
+    locked = Number(lockRows[0]?.acquired) === 1;
+    if (!locked) return;
+    const [latestRows] = await pool.query('SELECT created_at FROM backup_snapshots ORDER BY created_at DESC LIMIT 1');
+    const latest = latestRows[0]?.created_at ? new Date(latestRows[0].created_at).getTime() : 0;
+    if (latest && Date.now() - latest < 24 * 60 * 60 * 1000) return;
+    const payload = await buildBackupPayload({ id: null, name: 'Backup automático', email: null, role: 'system' }, 'daily');
+    await pool.query('INSERT INTO backup_snapshots (trigger_type, payload) VALUES (?, ?)', ['daily', JSON.stringify(payload)]);
+    console.log('Backup automático diário criado.');
+  } catch (err) {
+    console.error('Falha no backup automático diário:', err.message);
+  } finally {
+    if (locked) await pool.query("SELECT RELEASE_LOCK('inventarioti:daily-backup')").catch(() => {});
+  }
+}
 app.get('/api/admin/backup', requireAuth, requireAdmin, async (req, res) => {
   try {
-    const [inventoryRows] = await pool.query('SELECT state_key, payload, updated_at FROM inventory_state ORDER BY state_key');
-    const [infrastructureRows] = await pool.query('SELECT state_key, payload, updated_at FROM infrastructure_state ORDER BY state_key');
-    const [userRows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users ORDER BY id');
-    const parsePayload = (row) => ({
-      stateKey: row.state_key,
-      updatedAt: row.updated_at,
-      payload: typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload
-    });
-    const backup = {
-      backupVersion: 1,
-      generatedAt: new Date().toISOString(),
-      generatedBy: { id: req.authUser.id, name: req.authUser.name, email: req.authUser.email, role: req.authUser.role },
-      inventory: inventoryRows.filter((row) => row.state_key === 'current').map(parsePayload),
-      branches: inventoryRows.filter((row) => row.state_key !== 'current').map(parsePayload),
-      infrastructure: infrastructureRows.map(parsePayload),
-      users: userRows.map((user) => ({ ...user, active: Boolean(user.active) }))
-    };
+    const payload = await buildBackupPayload({ id: req.authUser.id, name: req.authUser.name, email: req.authUser.email, role: req.authUser.role }, 'manual');
     const filename = `backup-inventario-${new Date().toISOString().replace(/[:.]/g, '-')}.json`;
     res.setHeader('Cache-Control', 'no-store');
     res.setHeader('Content-Type', 'application/json; charset=utf-8');
-    res.setHeader('Content-Disposition', `attachment; filename="${filename}"`);
-    res.json(backup);
+    res.setHeader('Content-Disposition', `attachment; filename=\"${filename}\"`);
+    res.json(payload);
   } catch (_) {
     res.status(500).json({ error: 'Não foi possível gerar o backup manual.' });
   }
@@ -303,6 +325,13 @@ async function initDb() {
     updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
     INDEX idx_app_users_active (active),
     INDEX idx_app_users_role (role)
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS backup_snapshots (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    trigger_type VARCHAR(24) NOT NULL,
+    payload JSON NOT NULL,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_backup_snapshots_created_at (created_at)
   )`);
   await pool.query(`CREATE TABLE IF NOT EXISTS app_sessions (
     token_hash CHAR(64) PRIMARY KEY,
@@ -446,6 +475,8 @@ app.get(/.*/, (req, res) => res.sendFile(path.join(__dirname, 'dist', 'index.htm
 (async () => {
   try {
     await initDb();
+    await runAutomaticBackup();
+    setInterval(runAutomaticBackup, 60 * 60 * 1000);
     app.listen(PORT, '0.0.0.0', () => console.log(`Inventário TI API listening on ${PORT}`));
   } catch (err) {
     console.error(err.message);
