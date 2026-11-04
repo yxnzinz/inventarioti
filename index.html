@@ -18,6 +18,26 @@ main#overview{position:relative;isolation:isolate;overflow-x:clip;max-width:100%
 main#overview> *{max-width:100%;min-width:0}
 main#overview> [hidden],main#overview> .screen-hidden{display:none!important;visibility:hidden!important;opacity:0!important;position:absolute!important;inset:auto!important;width:0!important;height:0!important;min-height:0!important;max-height:0!important;overflow:hidden!important;pointer-events:none!important;margin:0!important;padding:0!important;border:0!important;transform:none!important}
 main#overview> [hidden] *{display:none!important}
+/* Sidebar estável: nenhum elemento absoluto pode sobrepor a marca ou a navegação. */
+.rail{display:flex;flex-direction:column;overflow-y:auto;overflow-x:hidden;background:#edf5fa;color:#183b56;border-right:1px solid #c7dce8}
+.rail .brand{flex:0 0 auto;border-color:#8fb8cf;color:#1d4e78;background:#f8fcfe;margin-bottom:22px}
+.rail .brand strong{color:#173b5a}
+.rail>p{flex:0 0 auto;color:#52748a;margin:18px 0 10px}
+.rail nav{display:flex;flex-direction:column;flex:0 0 auto}
+.rail a{color:#27526d}
+.rail a#executiveNav,.rail a#exportNav,.rail a#branchNav,.rail a#historyNav,.rail a#reportNav,.rail a#infraNav,.rail a#usersNav{color:#27526d}
+.rail a.active,.rail a:hover{background:#d8ebf6;color:#16466a}
+.rail a.active::before{background:#2f77ad;color:#fff;border-color:#2f77ad}
+.rail a:hover::before{background:#c3e0ef;color:#16466a;border-color:#6ea6c5}
+.rail .rail-divider{flex:0 0 auto}
+.rail .source{position:static;flex:0 0 auto;margin-top:auto;padding-top:22px;font-size:11px;line-height:1.4;color:#52748a}
+body.dark-mode .rail{background:#07131e;color:#dce9f2;border-right-color:#1f384b}
+body.dark-mode .rail .brand{border-color:#406b89;background:transparent;color:#b9d8ea}
+body.dark-mode .rail .brand strong{color:#fff}
+body.dark-mode .rail>p{color:#8eafc3}
+body.dark-mode .rail a,body.dark-mode .rail a#executiveNav,body.dark-mode .rail a#exportNav,body.dark-mode .rail a#branchNav,body.dark-mode .rail a#historyNav,body.dark-mode .rail a#reportNav,body.dark-mode .rail a#infraNav,body.dark-mode .rail a#usersNav{color:#d7e8f5}
+body.dark-mode .rail a.active,body.dark-mode .rail a:hover{background:#245d89;color:#fff}
+body.dark-mode .rail .source{color:#8eafc3}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
