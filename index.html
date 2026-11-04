@@ -50,6 +50,20 @@ body.dark-mode .rail::-webkit-scrollbar-thumb{background:linear-gradient(180deg,
 body.dark-mode .rail::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#86c3dc 0%,#317da2 100%)}
 body.dark-mode .auth-logo-wrap{background:#142838;border-color:transparent;box-shadow:none}
 body.dark-mode .auth-logo{background:#142838}
+/* Login corporativo dividido: identidade visual à esquerda e acesso à direita. */
+.auth-card{width:min(900px,calc(100vw - 32px));padding:0;display:grid;grid-template-columns:minmax(0,1.08fr) minmax(320px,.92fr);gap:0;overflow:hidden;text-align:left;background:#f7fbfe}
+.auth-card>.eyebrow{grid-column:2;grid-row:1;padding:42px 44px 0;margin:0}
+.auth-card>h1{grid-column:2;grid-row:2;padding:0 44px;margin:8px 0 24px;text-align:left}
+.auth-logo-wrap{grid-column:1;grid-row:1 / span 4;align-self:stretch;display:flex;align-items:center;justify-content:center;min-height:430px;margin:0;padding:42px;background:linear-gradient(145deg,#e5f2f9 0%,#f7fbfe 58%,#d7eaf4 100%);border:0;border-radius:0;position:relative;overflow:hidden}
+.auth-logo-wrap::before{content:"";position:absolute;width:280px;height:280px;right:-100px;top:-120px;border-radius:50%;background:#fff8;box-shadow:-160px 230px 0 -60px #2f77ad18;pointer-events:none}
+.auth-logo{position:relative;z-index:1;max-width:100%;max-height:225px}
+.auth-card>form{grid-column:2;grid-row:3;padding:0 44px;max-width:none}
+.auth-card>.auth-status{grid-column:2;grid-row:4;padding:0 44px 38px;margin-top:14px}
+body.dark-mode .auth-card{background:#142838}
+body.dark-mode .auth-logo-wrap{background:linear-gradient(145deg,#102536 0%,#142838 58%,#0d202f 100%)}
+body.dark-mode .auth-logo-wrap::before{background:#7bb6d01a;box-shadow:-160px 230px 0 -60px #2f77ad22}
+body.dark-mode .auth-card>h1{color:#eef6fb}
+@media(max-width:720px){.auth-card{display:grid;grid-template-columns:1fr;width:min(470px,calc(100vw - 24px))}.auth-logo-wrap{grid-column:1;grid-row:1;min-height:190px;padding:22px}.auth-logo{max-height:145px}.auth-card>.eyebrow{grid-column:1;grid-row:2;padding:26px 26px 0}.auth-card>h1{grid-column:1;grid-row:3;padding:0 26px;margin-bottom:20px}.auth-card>form{grid-column:1;grid-row:4;padding:0 26px}.auth-card>.auth-status{grid-column:1;grid-row:5;padding:0 26px 28px}}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
