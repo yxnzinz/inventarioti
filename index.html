@@ -38,6 +38,16 @@ body.dark-mode .rail>p{color:#8eafc3}
 body.dark-mode .rail a,body.dark-mode .rail a#executiveNav,body.dark-mode .rail a#exportNav,body.dark-mode .rail a#branchNav,body.dark-mode .rail a#historyNav,body.dark-mode .rail a#reportNav,body.dark-mode .rail a#infraNav,body.dark-mode .rail a#usersNav{color:#d7e8f5}
 body.dark-mode .rail a.active,body.dark-mode .rail a:hover{background:#245d89;color:#fff}
 body.dark-mode .rail .source{color:#8eafc3}
+/* Barra de rolagem corporativa da sidebar */
+.rail{scrollbar-width:thin;scrollbar-color:#6fa8c7 #dcecf4}
+.rail::-webkit-scrollbar{width:9px}
+.rail::-webkit-scrollbar-track{background:#dcecf4;border-left:1px solid #c3dce9;border-radius:999px}
+.rail::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#8bc3dd 0%,#3d82aa 100%);border:2px solid #dcecf4;border-radius:999px;min-height:42px}
+.rail::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#6caed0 0%,#28658e 100%)}
+body.dark-mode .rail{scrollbar-color:#4f86a6 #0b2233}
+body.dark-mode .rail::-webkit-scrollbar-track{background:#0b2233;border-left-color:#173b50}
+body.dark-mode .rail::-webkit-scrollbar-thumb{background:linear-gradient(180deg,#6ca6c2 0%,#245c7b 100%);border-color:#0b2233}
+body.dark-mode .rail::-webkit-scrollbar-thumb:hover{background:linear-gradient(180deg,#86c3dc 0%,#317da2 100%)}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
