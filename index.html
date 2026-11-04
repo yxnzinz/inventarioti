@@ -64,6 +64,22 @@ body.dark-mode .auth-logo-wrap{background:linear-gradient(145deg,#102536 0%,#142
 body.dark-mode .auth-logo-wrap::before{background:#7bb6d01a;box-shadow:-160px 230px 0 -60px #2f77ad22}
 body.dark-mode .auth-card>h1{color:#eef6fb}
 @media(max-width:720px){.auth-card{display:grid;grid-template-columns:1fr;width:min(470px,calc(100vw - 24px))}.auth-logo-wrap{grid-column:1;grid-row:1;min-height:190px;padding:22px}.auth-logo{max-height:145px}.auth-card>.eyebrow{grid-column:1;grid-row:2;padding:26px 26px 0}.auth-card>h1{grid-column:1;grid-row:3;padding:0 26px;margin-bottom:20px}.auth-card>form{grid-column:1;grid-row:4;padding:0 26px}.auth-card>.auth-status{grid-column:1;grid-row:5;padding:0 26px 28px}}
+/* Refinamento executivo exclusivo do login em modo escuro. */
+body.dark-mode .auth-gate{background:radial-gradient(circle at 12% 18%,#214c6a 0%,transparent 32%),radial-gradient(circle at 88% 82%,#173f5d 0%,transparent 34%),linear-gradient(135deg,#081521 0%,#0e2434 52%,#102d45 100%)}
+body.dark-mode .auth-card{border:1px solid #41657d;border-radius:22px;background:#142838;box-shadow:0 28px 90px #020b14cc,0 0 0 1px #8ac3df18;}
+body.dark-mode .auth-logo-wrap{background:#142838;border-right:1px solid #35546b;}
+body.dark-mode .auth-logo-wrap::before{width:360px;height:360px;right:-150px;top:-170px;background:#77b8d512;box-shadow:-210px 300px 0 -70px #2f77ad20}
+body.dark-mode .auth-card>.eyebrow{color:#79b9d9;letter-spacing:.22em}
+body.dark-mode .auth-card>h1{font-size:30px;letter-spacing:-.045em;text-shadow:0 2px 14px #0006}
+body.dark-mode .auth-card>form{border-top:1px solid #2d4e63;padding-top:24px}
+body.dark-mode .auth-card label{color:#b9d1df;letter-spacing:.02em}
+body.dark-mode .auth-card input{background:#0e202f;color:#f1f7fb;border-color:#41657d;box-shadow:inset 0 1px 2px #020b1466,0 0 0 0 #4d9aca;transition:border-color .15s ease,box-shadow .15s ease,background .15s ease}
+body.dark-mode .auth-card input:focus{background:#11283a;border-color:#73badb;box-shadow:0 0 0 3px #4d9aca2e}
+body.dark-mode .auth-card input::placeholder{color:#7896a8}
+body.dark-mode .auth-card .btn.primary{background:linear-gradient(135deg,#2f88bd 0%,#21658f 100%);border-color:#6bb7d9;color:#fff;box-shadow:0 9px 22px #06152280}
+body.dark-mode .auth-card .btn.primary:hover{background:linear-gradient(135deg,#3a9bce 0%,#2879a8 100%);transform:translateY(-1px)}
+body.dark-mode .auth-card>.auth-status{color:#e29a9e}
+@media(max-width:720px){body.dark-mode .auth-logo-wrap{border-right:0;border-bottom:1px solid #35546b}body.dark-mode .auth-card>form{border-top:0;padding-top:0}}
 </style>
 <script src="https://cdn.sheetjs.com/xlsx-0.20.3/package/dist/xlsx.full.min.js"></script>
 </head>
