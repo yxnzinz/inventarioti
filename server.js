@@ -299,6 +299,7 @@ function validatePayload(payload) {
 async function initDb() {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL não configurada.');
   pool = mysql.createPool(process.env.DATABASE_URL);
+  const privateDataDir = path.join(__dirname, 'private-data');
   await pool.query(`CREATE TABLE IF NOT EXISTS inventory_state (
     state_key VARCHAR(64) PRIMARY KEY,
     payload JSON NOT NULL,
@@ -344,10 +345,10 @@ async function initDb() {
   )`);
   await pool.query(`CREATE TABLE IF NOT EXISTS infrastructure_state (state_key VARCHAR(64) PRIMARY KEY, payload JSON NOT NULL, updated_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP)`);
   const [infraRows] = await pool.query('SELECT state_key FROM infrastructure_state WHERE state_key = ?', ['current']);
-  const infraSeed = validateInfrastructurePayload(JSON.parse(fs.readFileSync(path.join(__dirname, 'infrastructure.json'), 'utf8')));
+  const infraSeed = validateInfrastructurePayload(JSON.parse(fs.readFileSync(path.join(privateDataDir, 'infrastructure.json'), 'utf8')));
   if (!infraRows.length) await pool.query('INSERT INTO infrastructure_state (state_key, payload) VALUES (?, ?)', ['current', JSON.stringify(infraSeed)]);
   const [rows] = await pool.query('SELECT state_key, payload FROM inventory_state WHERE state_key = ?', ['current']);
-  const seed = validatePayload(JSON.parse(fs.readFileSync(path.join(__dirname, 'data.json'), 'utf8')));
+  const seed = validatePayload(JSON.parse(fs.readFileSync(path.join(privateDataDir, 'data.json'), 'utf8')));
   if (!rows.length) {
     await pool.query('INSERT IGNORE INTO inventory_state (state_key, payload) VALUES (?, ?)', ['current', JSON.stringify(seed)]);
   } else {
