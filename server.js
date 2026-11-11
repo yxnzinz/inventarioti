@@ -186,6 +186,44 @@ async function buildBackupPayload(generatedBy, trigger) {
     users: userRows.map((user) => ({ ...user, active: Boolean(user.active) }))
   };
 }
+function parseBackupSnapshot(row) {
+  const payload = typeof row.payload === 'string' ? JSON.parse(row.payload) : row.payload;
+  if (!payload || !Array.isArray(payload.inventory) || !Array.isArray(payload.infrastructure)) throw new Error('Backup inválido ou incompatível.');
+  return payload;
+}
+function backupSummary(row, payload) {
+  const inventory = payload.inventory?.[0]?.payload || {};
+  const infrastructure = payload.infrastructure?.[0]?.payload || {};
+  return { id: Number(row.id), triggerType: row.trigger_type, createdAt: row.created_at, inventoryCount: Number(inventory.Count || inventory.Rows?.length || 0), infrastructureCount: Number(infrastructure.Count || infrastructure.Assets?.length || 0), branchCount: payload.branches?.length || 0 };
+}
+async function restoreBackup(backupId, user) {
+  let connection; let locked = false;
+  try {
+    const [backupRows] = await pool.query('SELECT id, trigger_type, payload, created_at FROM backup_snapshots WHERE id = ? LIMIT 1', [backupId]);
+    if (!backupRows.length) { const error = new Error('Backup não encontrado.'); error.statusCode = 404; throw error; }
+    const backup = backupRows[0]; const payload = parseBackupSnapshot(backup);
+    const inventoryStates = [...(payload.inventory || []), ...(payload.branches || [])].filter(item => item?.stateKey && item?.payload);
+    const current = inventoryStates.find(item => item.stateKey === 'current');
+    const infra = payload.infrastructure.find(item => item.stateKey === 'current') || payload.infrastructure[0];
+    if (!current || !infra?.payload) { const error = new Error('O backup não contém as bases necessárias.'); error.statusCode = 422; throw error; }
+    const [lockRows] = await pool.query("SELECT GET_LOCK('inventarioti:restore', 10) AS acquired"); locked = Number(lockRows[0]?.acquired) === 1;
+    if (!locked) { const error = new Error('Outra restauração está em andamento.'); error.statusCode = 409; throw error; }
+    const preRestore = await buildBackupPayload({ id: user.id, name: user.name, email: user.email, role: user.role }, 'pre_restore');
+    connection = await pool.getConnection(); await connection.beginTransaction();
+    const [preResult] = await connection.query('INSERT INTO backup_snapshots (trigger_type, payload) VALUES (?, ?)', ['pre_restore', JSON.stringify(preRestore)]);
+    await connection.query('INSERT INTO inventory_state (state_key, payload) VALUES (?, ?) ON DUPLICATE KEY UPDATE payload = VALUES(payload)', ['current', JSON.stringify(current.payload)]);
+    const branchKeys = inventoryStates.filter(item => item.stateKey !== 'current').map(item => item.stateKey);
+    if (branchKeys.length) await connection.query('DELETE FROM inventory_state WHERE state_key <> ? AND state_key NOT IN (?)', ['current', branchKeys]); else await connection.query('DELETE FROM inventory_state WHERE state_key <> ?', ['current']);
+    for (const item of inventoryStates.filter(entry => entry.stateKey !== 'current')) await connection.query('INSERT INTO inventory_state (state_key, payload) VALUES (?, ?) ON DUPLICATE KEY UPDATE payload = VALUES(payload)', [item.stateKey, JSON.stringify(item.payload)]);
+    await connection.query('INSERT INTO infrastructure_state (state_key, payload) VALUES (?, ?) ON DUPLICATE KEY UPDATE payload = VALUES(payload)', ['current', JSON.stringify(infra.payload)]);
+    const summary = { backupId: Number(backup.id), preRestoreBackupId: Number(preResult.insertId), operator: user.name, origin: 'Restauração administrativa', result: 'success' };
+    await connection.query('INSERT INTO backup_restore_events (backup_id, pre_restore_backup_id, user_id, result, summary) VALUES (?, ?, ?, ?, ?)', [backup.id, preResult.insertId, user.id, 'success', JSON.stringify(summary)]);
+    await connection.query('INSERT INTO inventory_history (state_key, action, source_file, record_count, summary) VALUES (?, ?, ?, ?, ?)', ['current', 'restore_backup', `backup #${backup.id}`, Number(current.payload.Count || current.payload.Rows?.length || 0), JSON.stringify(summary)]);
+    await connection.commit();
+    return { backupId: Number(backup.id), preRestoreBackupId: Number(preResult.insertId), inventoryCount: Number(current.payload.Count || current.payload.Rows?.length || 0), infrastructureCount: Number(infra.payload.Count || infra.payload.Assets?.length || 0) };
+  } catch (error) { if (connection) await connection.rollback().catch(() => {}); throw error; }
+  finally { connection?.release(); if (locked) await pool.query("SELECT RELEASE_LOCK('inventarioti:restore')").catch(() => {}); }
+}
 async function runAutomaticBackup() {
   let locked = false;
   try {
@@ -215,6 +253,26 @@ app.get('/api/admin/backup', requireAuth, requireAdmin, async (req, res) => {
   } catch (_) {
     res.status(500).json({ error: 'Não foi possível gerar o backup manual.' });
   }
+});
+app.get('/api/admin/backups', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT id, trigger_type, payload, created_at FROM backup_snapshots ORDER BY created_at DESC, id DESC LIMIT 100');
+    const backups = rows.map(row => { try { return backupSummary(row, parseBackupSnapshot(row)); } catch (_) { return { id: Number(row.id), triggerType: row.trigger_type, createdAt: row.created_at, invalid: true }; } });
+    res.setHeader('Cache-Control', 'no-store'); res.json({ backups });
+  } catch (_) { res.status(500).json({ error: 'Não foi possível listar os backups.' }); }
+});
+app.get('/api/admin/backups/:id/preview', requireAuth, requireAdmin, async (req, res) => {
+  try {
+    const [rows] = await pool.query('SELECT id, trigger_type, payload, created_at FROM backup_snapshots WHERE id = ? LIMIT 1', [Number(req.params.id)]);
+    if (!rows.length) return res.status(404).json({ error: 'Backup não encontrado.' });
+    const payload = parseBackupSnapshot(rows[0]); const summary = backupSummary(rows[0], payload);
+    const inventory = payload.inventory?.[0]?.payload || {}; const infra = payload.infrastructure?.[0]?.payload || {};
+    res.setHeader('Cache-Control', 'no-store'); res.json({ ...summary, sourceFile: inventory.SourceFile || '—', sectors: [...new Set((inventory.Rows || []).map(row => row.Setor).filter(Boolean))].sort(), operatingSystems: [...new Set((inventory.Rows || []).map(row => row.Sistema).filter(Boolean))].sort(), operationalStatuses: [...new Set((inventory.Rows || []).map(row => row['Status operacional']).filter(Boolean))].sort(), infrastructureCategories: [...new Set((infra.Assets || []).map(row => row.Categoria).filter(Boolean))].sort() });
+  } catch (error) { res.status(error.statusCode || 422).json({ error: error.message || 'Backup inválido.' }); }
+});
+app.post('/api/admin/backups/:id/restore', requireAuth, requireAdmin, async (req, res) => {
+  try { const result = await restoreBackup(Number(req.params.id), req.authUser); res.status(200).json({ ok: true, ...result }); }
+  catch (error) { res.status(error.statusCode || 500).json({ error: error.message || 'Não foi possível restaurar o backup.' }); }
 });
 app.get('/api/users', async (req, res) => {
   try { const [rows] = await pool.query('SELECT id, name, email, role, active, created_at, updated_at FROM app_users ORDER BY active DESC, name ASC'); res.json({ users: rows.map(publicUser) }); }
@@ -333,6 +391,16 @@ async function initDb() {
     payload JSON NOT NULL,
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
     INDEX idx_backup_snapshots_created_at (created_at)
+  )`);
+  await pool.query(`CREATE TABLE IF NOT EXISTS backup_restore_events (
+    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+    backup_id BIGINT NOT NULL,
+    pre_restore_backup_id BIGINT NOT NULL,
+    user_id INT NOT NULL,
+    result VARCHAR(24) NOT NULL,
+    summary JSON,
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_backup_restore_events_created_at (created_at)
   )`);
   await pool.query(`CREATE TABLE IF NOT EXISTS app_sessions (
     token_hash CHAR(64) PRIMARY KEY,
@@ -467,6 +535,7 @@ app.put('/api/inventory/status', requireAdmin, requireImportToken, async (req, r
     res.status(400).json({ error: err.message || 'Não foi possível atualizar o status.' });
   }
 });
+app.use('/api', (req, res) => res.status(404).json({ error: 'Endpoint não encontrado.' }));
 
 app.get('/data.json', (req, res) => res.status(404).end());
 app.get('/infrastructure.json', (req, res) => res.status(404).end());
