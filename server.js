@@ -398,7 +398,8 @@ app.get('/api/inventory/latest', async (req, res) => {
 
 app.get('/api/inventory/history', requireAdmin, async (req, res) => {
   try {
-    const [rows] = await pool.query('SELECT id, state_key, action, source_file, record_count, summary, created_at FROM inventory_history WHERE state_key = ? ORDER BY created_at DESC, id DESC LIMIT 100', ['current']);
+    const stateKey = req.query.branch ? branchStateKey(req.query.branch) : 'current';
+    const [rows] = await pool.query('SELECT id, state_key, action, source_file, record_count, summary, created_at FROM inventory_history WHERE state_key = ? ORDER BY created_at DESC, id DESC LIMIT 100', [stateKey]);
     res.setHeader('Cache-Control', 'no-store');
     res.json(rows.map((row) => ({ ...row, summary: typeof row.summary === 'string' ? JSON.parse(row.summary) : row.summary })));
   } catch (err) { res.status(500).json({ error: 'Falha ao consultar o histórico de importações.' }); }
@@ -426,6 +427,7 @@ app.post('/api/inventory/branch/import', requireAdmin, requireImportToken, async
     payload.BranchName = String(req.body.BranchName || DEFAULT_BRANCH_NAME).trim().slice(0, 120) || DEFAULT_BRANCH_NAME;
     const key = branchStateKey(req.body.BranchKey);
     await pool.query('INSERT INTO inventory_state (state_key, payload) VALUES (?, ?) ON DUPLICATE KEY UPDATE payload = VALUES(payload)', [key, JSON.stringify(payload)]);
+    await pool.query('INSERT INTO inventory_history (state_key, action, source_file, record_count, summary) VALUES (?, ?, ?, ?, ?)', [key, 'import', payload.SourceFile, payload.Count, JSON.stringify({operator: 'Operador local', origin: 'Importação da filial FOR - INTERCARGAS', branch: DEFAULT_BRANCH_NAME})]);
     res.status(200).json({ ok: true, count: payload.Count, importedAt: payload.ImportedAt, branchName: payload.BranchName });
   } catch (err) { res.status(400).json({ error: err.message || 'Payload inválido.' }); }
 });
