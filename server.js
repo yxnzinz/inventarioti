@@ -29,6 +29,7 @@ function extractAssetNumber(value) { const text = String(value ?? '').trim(); if
 function normalizeStatus(value, header = '') { const label = normalizeLabel(value); const headerLabel = normalizeLabel(header); if (label.includes('pessoal') || label.includes('usuario') || label.includes('usuário')) return 'Pessoal'; if ((headerLabel.includes('alug') || headerLabel.includes('locad')) && ['sim','yes','true','1'].includes(label)) return 'Alugada'; return label.includes('alug') || label.includes('locad') ? 'Alugada' : 'Patrimônio'; }
 function normalizeOperationalStatus(value) { const label = normalizeLabel(value); const aliases = { ativo: 'Ativo', 'em manutencao': 'Em manutenção', manutencao: 'Em manutenção', reserva: 'Reserva', backup: 'Backup', desativado: 'Desativado', 'em substituicao': 'Em substituição', 'aguardando setor': 'Aguardando definição de setor', 'aguardando definicao de setor': 'Aguardando definição de setor' }; return aliases[label] || 'Ativo'; }
 let pool;
+let dbReady = false;
 
 app.use(express.json({ limit: '15mb' }));
 app.use((req, res, next) => {
@@ -298,7 +299,7 @@ function validatePayload(payload) {
 
 async function initDb() {
   if (!process.env.DATABASE_URL) throw new Error('DATABASE_URL não configurada.');
-  pool = mysql.createPool(process.env.DATABASE_URL);
+  if (!pool) pool = mysql.createPool(process.env.DATABASE_URL);
   const privateDataDir = path.join(__dirname, 'private-data');
   await pool.query(`CREATE TABLE IF NOT EXISTS inventory_state (
     state_key VARCHAR(64) PRIMARY KEY,
@@ -374,10 +375,12 @@ async function initDb() {
 app.use('/api/inventory', requireAuth);
 app.use('/api/infrastructure', requireAuth);
 app.get('/_app/health', async (req, res) => {
+  if (!pool || !dbReady) return res.status(503).json({ ok: false, error: 'database_starting' });
   try {
     await pool.query('SELECT 1');
     res.status(200).json({ ok: true, service: 'inventarioti-api' });
   } catch (err) {
+    dbReady = false;
     res.status(503).json({ ok: false, error: 'database_unavailable' });
   }
 });
@@ -477,14 +480,27 @@ app.get('/infrastructure.json', (req, res) => res.status(404).end());
 app.use(express.static(path.join(__dirname, 'dist'), { index: 'index.html', maxAge: '1h' }));
 app.get(/.*/, (req, res) => res.sendFile(path.join(__dirname, 'dist', 'index.html')));
 
+app.listen(PORT, '0.0.0.0', () => console.log(`Inventário TI API listening on ${PORT}`));
 (async () => {
-  try {
-    await initDb();
-    await runAutomaticBackup();
-    setInterval(runAutomaticBackup, 60 * 60 * 1000);
-    app.listen(PORT, '0.0.0.0', () => console.log(`Inventário TI API listening on ${PORT}`));
-  } catch (err) {
-    console.error(err.message);
-    process.exit(1);
+  if (!process.env.DATABASE_URL) {
+    console.error('DATABASE_URL não configurada.');
+    return;
+  }
+  let backupTimerStarted = false;
+  while (!dbReady) {
+    try {
+      await initDb();
+      dbReady = true;
+      await runAutomaticBackup();
+      if (!backupTimerStarted) {
+        setInterval(runAutomaticBackup, 60 * 60 * 1000);
+        backupTimerStarted = true;
+      }
+      console.log('Banco de dados inicializado com sucesso.');
+    } catch (err) {
+      dbReady = false;
+      console.error(`Banco indisponível durante a inicialização; nova tentativa em 5s: ${err.message}`);
+      await new Promise(resolve => setTimeout(resolve, 5000));
+    }
   }
 })();
