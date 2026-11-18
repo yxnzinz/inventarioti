@@ -1,0 +1,80 @@
+Entregas
+
+•
+Publicar um painel permanente da Intercargas alimentado pelos 56 equipamentos e todos os campos individuais da planilha.
+
+•
+Disponibilizar filtros combináveis por semana de coleta, setor e sistema operacional, recalculando os indicadores conforme o recorte.
+
+•
+Exibir resumo por setor com totais consolidados e permitir clicar/expandir cada setor para ver suas máquinas individuais.
+
+•
+Exibir analítico contextualizado por setor, incluindo quantidade, sistemas operacionais, RAM total e disco médio.
+
+•
+Exibir tabela detalhada dos equipamentos com os campos originais preservados.
+
+•
+Permitir exportar as linhas filtradas em CSV e Excel.
+
+•
+Disponibilizar GET /api/inventory/latest para todos os usuários carregarem a base persistente atual.
+
+•
+Disponibilizar POST /api/inventory/import protegido por Bearer token, validando a estrutura antes de substituir a base.
+
+•
+Persistir a base atual em banco gerenciado e manter a versão anterior quando uma importação for rejeitada.
+
+•
+Adaptar o botão Importar XLSX para enviar a base validada à API e atualizar todos os usuários.
+
+•
+Adicionar a subaba Visão executiva na sidebar, com indicadores gerenciais, gráficos por setor e status patrimonial, alertas automáticos, leitura de infraestrutura e modo apresentação, mantendo a página principal operacional.
+
+•
+Redefinir a identidade cromática de todo o site a partir do logotipo Intercargas: azul celeste #2f77ad para ações e nomes de setores, azul profundo para títulos/sidebar/textos institucionais, vermelho #c53a3e para alertas e acentos, fundos azulados claros e estados interativos com contraste legível.
+
+•
+Ao selecionar um XLSX, exibir uma prévia sem gravar dados, validando a aba BASE COMPLETA e mostrando linhas encontradas, colunas reconhecidas, registros novos, alterados e removidos, erros/avisos e patrimônios duplicados; a base compartilhada só deve ser atualizada após o usuário clicar em Confirmar importação e fornecer o token.
+
+•
+Disponibilizar histórico de importações e alterações manuais de status, com data, origem, quantidade e resumo.
+
+•
+Abrir ficha completa do equipamento ao clicar em uma máquina, preservando os dados individuais e permitindo revisar seus status.
+
+•
+Disponibilizar status operacional independente da classificação patrimonial: Ativo, Em manutenção, Reserva, Backup, Desativado, Em substituição e Aguardando setor.
+
+•
+Adicionar pesquisa rápida por nome, patrimônio, hostname, setor, sistema e demais campos da base.
+
+•
+Disponibilizar relatório executivo do recorte atual com ação para gerar/salvar em PDF pelo navegador.
+
+•
+Criar e manter uma aba isolada de infraestrutura para a planilha específica de Impressoras, Uso de impressoras, Wi-Fi e Switches, com contadores, filtro por categoria/pesquisa, tabela de ativos e importação própria sem misturar com computadores.
+
+•
+Na aba Infraestrutura de rede, exibir uma barra CSS segmentada e clicável para separar e filtrar as categorias Impressoras, Wi-Fi e Switches, mantendo os contadores sincronizados com a tabela.
+
+•
+Implementar login interno com e-mail/identificador e senha própria, usando webdev_app_session, derivação segura de senha com scrypt, sessões persistentes no banco e cookie HttpOnly, Secure e SameSite=None no domínio HTTPS.
+
+•
+No primeiro acesso sem usuários, permitir cadastrar o primeiro usuário como Administrador; depois, bloquear o cadastro público e exigir sessão de Administrador para criar usuários.
+
+•
+Criar a subaba Gerenciador de usuários, visível somente para Administradores, com inclusão, edição de nome/e-mail interno, troca de senha, seleção de perfil Administrador ou Visualizador, ativação/desativação e exclusão.
+
+•
+Permitir e-mails internos fictícios ou inexistentes fora da empresa, usando-os somente como identificadores do login local.
+
+•
+Garantir que Administradores possam importar computadores, infraestrutura e outra filial, alterar status/classificação e gerenciar usuários; Visualizadores possam consultar, filtrar, abrir fichas, gerar relatórios e exportar, sem mutações.
+
+•
+Aplicar a autorização também nas rotas da API, sem depender somente de controles visuais no navegador; endpoints de consulta exigem sessão e endpoints de mutação/usuários exigem Administrador, mantendo o token de importação.
+
